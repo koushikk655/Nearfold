@@ -1,0 +1,40 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build output
+dist
+build
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+.DS_Store
+
+# Coverage and tests
+coverage
+.nyc_output
+
+# OS
+Thumbs.db
+
+# Drizzle
+drizzle/meta
+
+# Misc
+.cache
+.turbo
