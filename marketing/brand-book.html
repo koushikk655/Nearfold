@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nearfold — Brand Book · Phase 11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [data-theme="dark"] {
+    --canvas: #0E0E0E; --surface: #161616; --card: #1A1A1A; --card-elevated: #222222;
+    --text-primary: #F5F0E6; --text-secondary: #A8A29E; --text-muted: #6B6258; --text-inverse: #0E0E0E;
+    --border: rgba(245, 240, 230, 0.08); --border-strong: rgba(245, 240, 230, 0.18);
+    --success: #4FCD7E; --warning: #F0C674; --error: #FF6B6B; --info: #6BA8FF;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.3); --shadow-md: 0 8px 16px rgba(0,0,0,0.4); --shadow-lg: 0 20px 40px rgba(0,0,0,0.5);
+    --screen-blend: screen;
+  }
+  [data-theme="light"] {
+    --canvas: #F5F0E6; --surface: #FAF6EC; --card: #FFFFFF; --card-elevated: #FCFAF3;
+    --text-primary: #1A1A1A; --text-secondary: #5C5752; --text-muted: #948C82; --text-inverse: #F5F0E6;
+    --border: rgba(26, 26, 26, 0.08); --border-strong: rgba(26, 26, 26, 0.18);
+    --success: #1F7A3F; --warning: #B07816; --error: #C4302B; --info: #1858A8;
+    --shadow-sm: 0 2px 4px rgba(26,26,26,0.04); --shadow-md: 0 8px 16px rgba(26,26,26,0.08); --shadow-lg: 0 20px 40px rgba(26,26,26,0.12);
+    --screen-blend: multiply;
+  }
+  :root {
+    --accent: #FF8A3D; --accent-soft: rgba(255, 138, 61, 0.16); --accent-deeper: #E8732B;
+    --space-xs: 4px; --space-sm: 8px; --space-md: 12px; --space-base: 16px;
+    --space-lg: 24px; --space-xl: 32px; --space-xxl: 48px; --space-xxxl: 64px; --space-huge: 96px;
+    --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-pill: 999px;
+    --t-fast: 150ms; --t-normal: 250ms; --t-slow: 400ms;
+    --e-standard: cubic-bezier(0.2, 0, 0, 1);
+    --e-emphasized: cubic-bezier(0.2, 0, 0, 1.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--canvas); color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    transition: background var(--t-slow) var(--e-standard), color var(--t-slow) var(--e-standard);
+  }
+  .container { max-width: 1320px; margin: 0 auto; padding: 0 6%; }
+  .container-narrow { max-width: 880px; margin: 0 auto; padding: 0 6%; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: var(--space-lg);
+  }
+  .display {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.96; letter-spacing: -0.035em;
+  }
+  .display em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .section-title {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.05; letter-spacing: -0.025em;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .lede {
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem); color: var(--text-secondary);
+    max-width: 64ch; line-height: 1.55;
+  }
+
+  .top-bar {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(20px);
+    background: color-mix(in srgb, var(--canvas) 78%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-bar-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--space-base) 0;
+  }
+  .top-bar-left {
+    display: flex; align-items: baseline; gap: var(--space-md);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted);
+  }
+  .top-bar-left .crumb.active { color: var(--accent); }
+  .top-bar-left .sep { opacity: 0.4; }
+  .theme-control { display: flex; align-items: center; gap: var(--space-md); }
+  .toggle-track {
+    width: 56px; height: 30px; background: var(--accent);
+    border-radius: var(--r-pill); position: relative; cursor: pointer;
+  }
+  .toggle-knob {
+    width: 24px; height: 24px; background: var(--text-inverse);
+    border-radius: 50%; position: absolute; top: 3px; left: 3px;
+    transition: transform var(--t-normal) var(--e-emphasized);
+  }
+  [data-theme="light"] .toggle-track .toggle-knob { transform: translateX(26px); }
+  .toggle-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary); min-width: 44px;
+  }
+
+  header.hero { padding: 12vw 0 8vw; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-deco {
+    position: absolute; top: -8vw; right: -10vw;
+    width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
+    pointer-events: none; opacity: 0.18;
+  }
+  .hero-deco .circ {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 50%; height: 50%; border-radius: 50%;
+  }
+  .hero-deco .c1 { left: 0; background: var(--text-primary); }
+  .hero-deco .c2 { right: 0; background: var(--accent); mix-blend-mode: var(--screen-blend); }
+  header.hero .display { margin-bottom: var(--space-xl); }
+
+  section.row { padding: var(--space-huge) 0; border-bottom: 1px solid var(--border); }
+  .section-header { margin-bottom: var(--space-xxl); max-width: 80ch; }
+  .section-header .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.22em; color: var(--accent); margin-bottom: var(--space-base);
+  }
+  .section-header h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.025em;
+    margin-bottom: var(--space-sm);
+  }
+  .section-header h2 em { font-style: italic; color: var(--accent); }
+  .section-header .desc {
+    font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 60ch;
+    margin-top: var(--space-md);
+  }
+
+  /* LOGO CONSTRUCTION */
+  .logo-construct {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xxl);
+    align-items: center;
+  }
+  @media (max-width: 880px) { .logo-construct { grid-template-columns: 1fr; } }
+  .logo-canvas {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: var(--space-huge) var(--space-xxl);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 400px;
+  }
+  .logo-canvas .construction {
+    position: relative;
+    width: min(300px, 80vw); aspect-ratio: 1;
+  }
+  .logo-canvas .construction .circ {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 60%; aspect-ratio: 1; border-radius: 50%;
+  }
+  .logo-canvas .construction .c1 { left: 0; background: var(--text-primary); }
+  .logo-canvas .construction .c2 { right: 0; background: var(--accent); mix-blend-mode: var(--screen-blend); }
+  .logo-canvas .construction .guide {
+    position: absolute; border: 1px dashed var(--accent); opacity: 0.55;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .logo-canvas .construction .guide-c1 { left: 0; top: 50%; transform: translateY(-50%); width: 60%; aspect-ratio: 1; }
+  .logo-canvas .construction .guide-c2 { right: 0; top: 50%; transform: translateY(-50%); width: 60%; aspect-ratio: 1; }
+  .logo-canvas .construction .axis {
+    position: absolute; background: var(--accent); opacity: 0.4;
+    pointer-events: none;
+  }
+  .logo-canvas .construction .axis-h { left: 0; right: 0; top: 50%; height: 1px; transform: translateY(-50%); }
+  .logo-canvas .construction .label {
+    position: absolute; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--accent); letter-spacing: 0.06em;
+    background: var(--canvas); padding: 2px 6px; border-radius: 4px;
+  }
+  .logo-canvas .construction .label-cell { top: 50%; transform: translateY(-50%); left: 30%; transform: translate(-50%, -50%); }
+  .logo-canvas .construction .label-gap { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .specs-list { display: flex; flex-direction: column; gap: var(--space-base); }
+  .spec-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-row .k {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .spec-row .v {
+    font-family: 'Fraunces', serif; font-size: 15px;
+    color: var(--text-primary); font-weight: 500;
+  }
+  .spec-row .v code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--accent); background: var(--card-elevated);
+    padding: 2px 8px; border-radius: 4px;
+  }
+
+  /* CLEARSPACE */
+  .clearspace-canvas {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 64px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 280px;
+  }
+  .clearspace-logo {
+    display: inline-flex; align-items: center; gap: 14px;
+    position: relative; z-index: 2;
+  }
+  .clearspace-logo .sym {
+    width: 56px; height: 56px; position: relative;
+  }
+  .clearspace-logo .sym .circ {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border-radius: 50%;
+  }
+  .clearspace-logo .sym .c1 { left: 0; background: var(--text-primary); }
+  .clearspace-logo .sym .c2 { right: 0; background: var(--accent); mix-blend-mode: var(--screen-blend); }
+  .clearspace-logo .word {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 42px;
+    letter-spacing: -0.04em; color: var(--text-primary); line-height: 1;
+  }
+  .clearspace-canvas .x-guide {
+    position: absolute;
+    border: 1px dashed var(--accent); opacity: 0.45;
+    pointer-events: none;
+  }
+  .clearspace-canvas .x-guide.h { left: 16px; right: 16px; height: 48px; }
+  .clearspace-canvas .x-guide.h.t { top: 16px; }
+  .clearspace-canvas .x-guide.h.b { bottom: 16px; }
+  .clearspace-canvas .x-guide.v { top: 16px; bottom: 16px; width: 48px; }
+  .clearspace-canvas .x-guide.v.l { left: 16px; }
+  .clearspace-canvas .x-guide.v.r { right: 16px; }
+  .clearspace-canvas .x-label {
+    position: absolute; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .clearspace-canvas .x-label.t { top: 24px; left: 50%; transform: translateX(-50%); background: var(--card); padding: 0 8px; }
+  .clearspace-canvas .x-label.b { bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--card); padding: 0 8px; }
+
+  /* DO/DON'T GRID */
+  .dod-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-base);
+  }
+  @media (max-width: 700px) { .dod-grid { grid-template-columns: 1fr; } }
+  .dod-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: var(--space-xl);
+    position: relative;
+  }
+  .dod-card.do { border-left: 3px solid var(--success); }
+  .dod-card.dont { border-left: 3px solid var(--error); }
+  .dod-card .badge {
+    position: absolute; top: 14px; right: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; padding: 3px 8px; border-radius: 999px;
+  }
+  .dod-card.do .badge { background: color-mix(in srgb, var(--success) 16%, transparent); color: var(--success); }
+  .dod-card.dont .badge { background: color-mix(in srgb, var(--error) 12%, transparent); color: var(--error); }
+  .dod-card .preview {
+    height: 140px;
+    border-radius: var(--r-md);
+    margin-bottom: var(--space-base);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .dod-card .nl {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 16px;
+    color: var(--text-primary); margin-bottom: 4px;
+  }
+  .dod-card .nd { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  /* preview demo logos */
+  .dl { display: inline-flex; align-items: center; gap: 8px; }
+  .dl .sym { width: 28px; height: 28px; position: relative; }
+  .dl .sym .circ { position: absolute; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; border-radius: 50%; }
+  .dl .sym .c1 { left: 0; }
+  .dl .sym .c2 { right: 0; mix-blend-mode: var(--screen-blend); }
+  .dl .word { font-family: 'Fraunces', serif; font-weight: 300; font-size: 22px; letter-spacing: -0.04em; line-height: 1; }
+
+  /* COLOR USAGE */
+  .color-canvas-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-base);
+  }
+  @media (max-width: 700px) { .color-canvas-row { grid-template-columns: 1fr 1fr; } }
+  .color-canvas-tile {
+    border-radius: var(--r-md); overflow: hidden;
+    display: flex; flex-direction: column;
+    border: 1px solid var(--border);
+  }
+  .color-canvas-tile .swatch {
+    height: 140px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .color-canvas-tile .swatch.dark { background: #0E0E0E; }
+  .color-canvas-tile .swatch.light { background: #F5F0E6; }
+  .color-canvas-tile .swatch.accent { background: #FF8A3D; }
+  .color-canvas-tile .swatch.surface { background: #161616; }
+  .color-canvas-tile .swatch.card-l { background: #FFFFFF; }
+  .color-canvas-tile .demo-logo {
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .color-canvas-tile .demo-logo .sym {
+    width: 32px; height: 32px; position: relative;
+  }
+  .color-canvas-tile .demo-logo .sym .circ {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; border-radius: 50%;
+  }
+  .color-canvas-tile .demo-logo .word {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 24px;
+    letter-spacing: -0.04em; line-height: 1;
+  }
+  .color-canvas-tile .meta {
+    padding: var(--space-base);
+    background: var(--card);
+  }
+  .color-canvas-tile .meta .k {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .color-canvas-tile .meta .hex {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-primary);
+  }
+
+  /* VOICE TABLE */
+  .voice-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-base);
+  }
+  @media (max-width: 700px) { .voice-grid { grid-template-columns: 1fr; } }
+  .voice-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: var(--space-xl);
+  }
+  .voice-card.do { border-top: 3px solid var(--success); }
+  .voice-card.dont { border-top: 3px solid var(--error); }
+  .voice-card .head {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: var(--space-base); padding-bottom: var(--space-base);
+    border-bottom: 1px solid var(--border);
+  }
+  .voice-card.do .head { color: var(--success); }
+  .voice-card.dont .head { color: var(--error); }
+  .voice-card ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-md); }
+  .voice-card li {
+    font-family: 'Fraunces', serif; font-size: 16px; line-height: 1.45;
+    color: var(--text-primary);
+  }
+  .voice-card.dont li { color: var(--text-secondary); text-decoration: line-through; text-decoration-color: var(--error); text-decoration-thickness: 1px; }
+
+  /* TYPOGRAPHY DEMO */
+  .type-demo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: var(--space-xxl);
+  }
+  .type-demo .t-row {
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr 220px;
+    gap: var(--space-xl); align-items: center;
+  }
+  @media (max-width: 700px) { .type-demo .t-row { grid-template-columns: 1fr; } }
+  .type-demo .t-row:last-child { border-bottom: none; }
+  .type-demo .t-row:first-child { padding-top: 0; }
+  .type-demo .meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-muted); line-height: 1.7;
+  }
+  .type-demo .meta .name { color: var(--accent); font-weight: 500; text-transform: uppercase; letter-spacing: 0.16em; font-size: 10px; display: block; margin-bottom: 6px; }
+
+  /* PHOTOGRAPHY STYLE */
+  .photo-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-base);
+  }
+  @media (max-width: 700px) { .photo-grid { grid-template-columns: 1fr; } }
+  .photo-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    position: relative;
+  }
+  .photo-card.do { border-top: 3px solid var(--success); }
+  .photo-card.dont { border-top: 3px solid var(--error); }
+  .photo-card .ph {
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    background-color: #3A2E25;
+    position: relative;
+  }
+  .photo-card.do .ph {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/cdc16df8-4aca-453f-907c-1babb79d3e13.png");
+  }
+  .photo-card.dont .ph {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/cb194988-3cef-4acd-9aad-db9868e09d5d.png");
+    filter: grayscale(0.4) contrast(1.4) brightness(0.7);
+  }
+  .photo-card .badge {
+    position: absolute; top: 14px; left: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; padding: 3px 8px; border-radius: 999px;
+    z-index: 2;
+  }
+  .photo-card.do .badge { background: color-mix(in srgb, var(--success) 16%, transparent); color: #FFFFFF; backdrop-filter: blur(8px); }
+  .photo-card.dont .badge { background: color-mix(in srgb, var(--error) 16%, transparent); color: #FFFFFF; backdrop-filter: blur(8px); }
+  .photo-card .meta {
+    padding: var(--space-lg);
+  }
+  .photo-card .meta .t {
+    font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500;
+    color: var(--text-primary); margin-bottom: 4px;
+  }
+  .photo-card .meta .d { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* APPLICATIONS */
+  .app-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-base);
+  }
+  @media (max-width: 880px) { .app-grid { grid-template-columns: 1fr 1fr; } }
+  .app-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: var(--space-lg);
+    text-align: center;
+  }
+  .app-card .preview {
+    margin: 0 auto var(--space-base);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 120px;
+  }
+  .app-card .nm {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 14px;
+    color: var(--text-primary);
+  }
+  .app-card .sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-muted); letter-spacing: 0.1em; margin-top: 4px;
+  }
+  /* App icon */
+  .app-icon {
+    width: 84px; height: 84px;
+    border-radius: 22%;
+    background: #0E0E0E;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  .app-icon .ic-c { position: absolute; top: 50%; transform: translateY(-50%); width: 42%; aspect-ratio: 1; border-radius: 50%; }
+  .app-icon .ic-c1 { left: 14%; background: #F5F0E6; }
+  .app-icon .ic-c2 { right: 14%; background: #FF8A3D; mix-blend-mode: screen; }
+
+  footer {
+    padding: var(--space-xxl) 0; border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-muted); text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container top-bar-inner">
+    <div class="top-bar-left">
+      <span class="crumb">Nearfold</span>
+      <span class="sep">·</span>
+      <span class="crumb">Design</span>
+      <span class="sep">·</span>
+      <span class="crumb">Phase 11</span>
+      <span class="sep">·</span>
+      <span class="crumb active">Brand Book</span>
+    </div>
+    <div class="theme-control">
+      <span class="toggle-label" id="themeLabel">DARK</span>
+      <div class="toggle-track" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme">
+        <div class="toggle-knob"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="hero-deco" aria-hidden="true">
+    <div class="circ c1"></div>
+    <div class="circ c2"></div>
+  </div>
+  <div class="container hero-content">
+    <div class="eyebrow">Phase 11 · Brand Identity Book</div>
+    <h1 class="display">How to <em>be</em><br/>Nearfold.</h1>
+    <p class="lede">The rules of the brand — logo construction, clearspace, color usage, voice, photography, and application examples. Read it once. Apply it everywhere. Don't deviate without a reason worth defending.</p>
+  </div>
+</header>
+
+
+<!-- ============================================================ LOGO CONSTRUCTION -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">01 · Logo construction</div>
+      <h2>Two circles. <em>Perfect math.</em></h2>
+      <p class="desc">The symbol is two overlapping circles of identical diameter, separated by 40% of their diameter, with their centers on a horizontal axis. The left circle is the canvas-contrast color (cream on dark, charcoal on light). The right circle is saffron #FF8A3D, blended via "screen" on dark or "multiply" on light.</p>
+    </div>
+
+    <div class="logo-construct">
+      <div class="logo-canvas">
+        <div class="construction">
+          <div class="axis axis-h"></div>
+          <div class="guide guide-c1"></div>
+          <div class="guide guide-c2"></div>
+          <div class="circ c1"></div>
+          <div class="circ c2"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="specs-list">
+          <div class="spec-row">
+            <span class="k">Symbol shape</span>
+            <span class="v">2 circles, identical radius</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Circle diameter (relative)</span>
+            <span class="v"><code>0.6</code> of bounding box width</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Horizontal separation</span>
+            <span class="v"><code>0.4</code> of bounding box width</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Vertical alignment</span>
+            <span class="v">Centers on horizontal axis</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Left circle (dark canvas)</span>
+            <span class="v"><code>#F5F0E6</code> cream</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Left circle (light canvas)</span>
+            <span class="v"><code>#1A1A1A</code> charcoal</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Right circle</span>
+            <span class="v"><code>#FF8A3D</code> saffron</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Right circle blend mode</span>
+            <span class="v">screen (dark) / multiply (light)</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Wordmark</span>
+            <span class="v">Fraunces 300 lowercase</span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Wordmark letter-spacing</span>
+            <span class="v"><code>-0.04em</code></span>
+          </div>
+          <div class="spec-row">
+            <span class="k">Symbol-to-wordmark gap</span>
+            <span class="v">25% of symbol height</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ CLEARSPACE & SIZES -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">02 · Clearspace &amp; sizes</div>
+      <h2>Give it <em>room to breathe.</em></h2>
+      <p class="desc">Around the lockup, maintain clearspace equal to the height of the symbol (or "1x"). Don't crowd it with copy, photography, or borders. Minimum sizes prevent illegibility.</p>
+    </div>
+
+    <div class="clearspace-canvas">
+      <div class="x-guide h t"></div>
+      <div class="x-guide h b"></div>
+      <div class="x-guide v l"></div>
+      <div class="x-guide v r"></div>
+      <div class="x-label t">1x clearspace</div>
+      <div class="x-label b">1x clearspace</div>
+
+      <div class="clearspace-logo">
+        <div class="sym">
+          <div class="circ c1"></div>
+          <div class="circ c2"></div>
+        </div>
+        <div class="word">nearfold</div>
+      </div>
+    </div>
+
+    <div class="specs-list" style="margin-top: var(--space-xl);">
+      <div class="spec-row">
+        <span class="k">Min size · full lockup</span>
+        <span class="v"><code>120 px wide</code></span>
+      </div>
+      <div class="spec-row">
+        <span class="k">Min size · symbol alone</span>
+        <span class="v"><code>16 px square</code> (favicon-friendly)</span>
+      </div>
+      <div class="spec-row">
+        <span class="k">Recommended · app icon</span>
+        <span class="v"><code>1024×1024 px</code> source · 22% corner radius</span>
+      </div>
+      <div class="spec-row">
+        <span class="k">Recommended · marketing hero</span>
+        <span class="v">Symbol at 64px+, wordmark at 40px+</span>
+      </div>
+      <div class="spec-row">
+        <span class="k">Recommended · in-app header</span>
+        <span class="v">Symbol at 24px · Wordmark at 18px</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ DO / DON'T -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">03 · Logo misuse</div>
+      <h2>What <em>not</em> to do.</h2>
+      <p class="desc">The logo is a precise object. Every deviation below is a brand violation — the symbol's geometry, the wordmark's typography, and the saffron accent are all locked.</p>
+    </div>
+
+    <div class="dod-grid">
+      <div class="dod-card do">
+        <span class="badge">CORRECT</span>
+        <div class="preview" style="background:#0E0E0E;">
+          <div class="dl">
+            <div class="sym">
+              <div class="circ c1" style="background:#F5F0E6;"></div>
+              <div class="circ c2" style="background:#FF8A3D;mix-blend-mode:screen;"></div>
+            </div>
+            <div class="word" style="color:#F5F0E6;">nearfold</div>
+          </div>
+        </div>
+        <div class="nl">Cream + saffron on charcoal</div>
+        <div class="nd">The canonical dark-canvas lockup. Both circles visible, wordmark in cream.</div>
+      </div>
+
+      <div class="dod-card dont">
+        <span class="badge">WRONG</span>
+        <div class="preview" style="background:#0E0E0E;">
+          <div class="dl">
+            <div class="sym">
+              <div class="circ c1" style="background:#FF8A3D;"></div>
+              <div class="circ c2" style="background:#F5F0E6;mix-blend-mode:screen;"></div>
+            </div>
+            <div class="word" style="color:#F5F0E6;">nearfold</div>
+          </div>
+        </div>
+        <div class="nl">Reversed circles</div>
+        <div class="nd">The saffron circle is always on the right. Don't flip them — the geometry is the brand.</div>
+      </div>
+
+      <div class="dod-card dont">
+        <span class="badge">WRONG</span>
+        <div class="preview" style="background:#0E0E0E;">
+          <div class="dl">
+            <div class="sym">
+              <div class="circ c1" style="background:#F5F0E6;"></div>
+              <div class="circ c2" style="background:#6BA8FF;mix-blend-mode:screen;"></div>
+            </div>
+            <div class="word" style="color:#F5F0E6;">nearfold</div>
+          </div>
+        </div>
+        <div class="nl">Color substitution</div>
+        <div class="nd">Saffron #FF8A3D is the only correct accent. Never replace with blue, green, or any other brand color.</div>
+      </div>
+
+      <div class="dod-card dont">
+        <span class="badge">WRONG</span>
+        <div class="preview" style="background:#0E0E0E;">
+          <div class="dl">
+            <div class="sym">
+              <div class="circ c1" style="background:#F5F0E6;"></div>
+              <div class="circ c2" style="background:#FF8A3D;mix-blend-mode:screen;"></div>
+            </div>
+            <div class="word" style="color:#F5F0E6;font-family:'Inter',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;font-size:18px;">NEARFOLD</div>
+          </div>
+        </div>
+        <div class="nl">Wordmark in the wrong font</div>
+        <div class="nd">The wordmark is always Fraunces 300 lowercase. Never Inter, never uppercase, never bold.</div>
+      </div>
+
+      <div class="dod-card dont">
+        <span class="badge">WRONG</span>
+        <div class="preview" style="background:#0E0E0E;">
+          <div class="dl">
+            <div class="sym" style="transform:rotate(15deg);">
+              <div class="circ c1" style="background:#F5F0E6;"></div>
+              <div class="circ c2" style="background:#FF8A3D;mix-blend-mode:screen;"></div>
+            </div>
+            <div class="word" style="color:#F5F0E6;">nearfold</div>
+          </div>
+        </div>
+        <div class="nl">Rotated / skewed</div>
+        <div class="nd">The symbol is always horizontal — centers on the X axis. No rotation, no skew, no perspective.</div>
+      </div>
+
+      <div class="dod-card dont">
+        <span class="badge">WRONG</span>
+        <div class="preview" style="background:linear-gradient(135deg,#FF1493,#00BFFF);">
+          <div class="dl">
+            <div class="sym">
+              <div class="circ c1" style="background:#F5F0E6;"></div>
+              <div class="circ c2" style="background:#FF8A3D;mix-blend-mode:screen;"></div>
+            </div>
+            <div class="word" style="color:#F5F0E6;">nearfold</div>
+          </div>
+        </div>
+        <div class="nl">Placed on a busy / colored background</div>
+        <div class="nd">Use the logo only on Nearfold's canvas colors (charcoal #0E0E0E or cream #F5F0E6) or over photography with appropriate dark-tint backdrop for legibility.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ COLOR USAGE -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">04 · Color on the logo</div>
+      <h2>Canvas <em>permutations.</em></h2>
+      <p class="desc">The logo lives correctly on four canvas types. The blend mode of the saffron circle adjusts per surface: screen on dark, multiply on light. Never place the logo on a fully-saffron background.</p>
+    </div>
+
+    <div class="color-canvas-row">
+      <div class="color-canvas-tile">
+        <div class="swatch dark">
+          <div class="demo-logo">
+            <div class="sym"><div class="circ" style="left:0;background:#F5F0E6;"></div><div class="circ" style="right:0;background:#FF8A3D;mix-blend-mode:screen;"></div></div>
+            <div class="word" style="color:#F5F0E6;">nearfold</div>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="k">CHARCOAL CANVAS</div>
+          <div class="hex">#0E0E0E</div>
+        </div>
+      </div>
+
+      <div class="color-canvas-tile">
+        <div class="swatch surface">
+          <div class="demo-logo">
+            <div class="sym"><div class="circ" style="left:0;background:#F5F0E6;"></div><div class="circ" style="right:0;background:#FF8A3D;mix-blend-mode:screen;"></div></div>
+            <div class="word" style="color:#F5F0E6;">nearfold</div>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="k">DARK SURFACE</div>
+          <div class="hex">#161616</div>
+        </div>
+      </div>
+
+      <div class="color-canvas-tile">
+        <div class="swatch light">
+          <div class="demo-logo">
+            <div class="sym"><div class="circ" style="left:0;background:#1A1A1A;"></div><div class="circ" style="right:0;background:#FF8A3D;mix-blend-mode:multiply;"></div></div>
+            <div class="word" style="color:#1A1A1A;">nearfold</div>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="k">CREAM CANVAS</div>
+          <div class="hex">#F5F0E6</div>
+        </div>
+      </div>
+
+      <div class="color-canvas-tile">
+        <div class="swatch card-l">
+          <div class="demo-logo">
+            <div class="sym"><div class="circ" style="left:0;background:#1A1A1A;"></div><div class="circ" style="right:0;background:#FF8A3D;mix-blend-mode:multiply;"></div></div>
+            <div class="word" style="color:#1A1A1A;">nearfold</div>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="k">LIGHT SURFACE</div>
+          <div class="hex">#FFFFFF</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: var(--space-xxl); padding: var(--space-xl); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); display: flex; align-items: center; gap: var(--space-base);">
+      <div style="width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--warning) 18%,transparent);color:var(--warning);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">!</div>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-weight:500;font-size:15px;color:var(--text-primary);margin-bottom:4px;">Saffron canvases are off-limits for the logo.</div>
+        <div style="font-size:13px;color:var(--text-secondary);">Saffron #FF8A3D is the brand accent — never the brand canvas. Don't place the logo on a saffron background; the saffron circle disappears into the canvas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ TYPOGRAPHY -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">05 · Typography</div>
+      <h2>Three faces. <em>Distinct jobs.</em></h2>
+      <p class="desc">Fraunces does brand voice — display headlines, shop names, product names. Inter does UI — body copy, labels, CTAs. JetBrains Mono does data — prices, hex codes, addresses, IDs. Never substitute one for another's job.</p>
+    </div>
+
+    <div class="type-demo">
+      <div class="t-row">
+        <div style="font-family:'Fraunces',serif;font-weight:300;font-size:56px;line-height:0.95;letter-spacing:-0.04em;">Discover<br/>home-<em style="font-style:italic;color:var(--accent);">made.</em></div>
+        <div class="meta">
+          <span class="name">FRAUNCES · DISPLAY</span>
+          <div>Weight 300 / italic 300</div>
+          <div>For: brand headlines, marketing</div>
+          <div>Substitute: <em style="color:var(--text-muted);">never</em></div>
+        </div>
+      </div>
+
+      <div class="t-row">
+        <div style="font-family:'Fraunces',serif;font-weight:500;font-size:24px;line-height:1.2;letter-spacing:-0.01em;">Anita's Bakery</div>
+        <div class="meta">
+          <span class="name">FRAUNCES · h3</span>
+          <div>Weight 500</div>
+          <div>For: shop names, product names</div>
+          <div>Always sentence case</div>
+        </div>
+      </div>
+
+      <div class="t-row">
+        <div style="font-family:'Inter',sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:var(--text-secondary);">Home-baked cardamom cookies, sourdough loaves, and seasonal mithai. Opens at 8 AM.</div>
+        <div class="meta">
+          <span class="name">INTER · BODY</span>
+          <div>Weight 400</div>
+          <div>For: paragraphs, descriptions</div>
+          <div>Substitute: System font fallback only</div>
+        </div>
+      </div>
+
+      <div class="t-row">
+        <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.01em;background:var(--accent);color:var(--text-inverse);padding:14px 22px;border-radius:999px;display:inline-block;">Place order · ₹820</div>
+        <div class="meta">
+          <span class="name">INTER · BUTTON</span>
+          <div>Weight 600</div>
+          <div>For: all CTAs, buttons</div>
+          <div>Always sentence case</div>
+        </div>
+      </div>
+
+      <div class="t-row">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-primary);letter-spacing:0.04em;">₹360 · BOX OF 12 · 3.2 KM AWAY</div>
+        <div class="meta">
+          <span class="name">JETBRAINS MONO · DATA</span>
+          <div>Weight 400 / 500</div>
+          <div>For: prices, addresses, IDs</div>
+          <div>Always with INR symbol for prices</div>
+        </div>
+      </div>
+
+      <div class="t-row">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;font-weight:500;">VERIFIED · PREMIUM · OPEN NOW</div>
+        <div class="meta">
+          <span class="name">JETBRAINS MONO · EYEBROW</span>
+          <div>Weight 500 · uppercase</div>
+          <div>Tracking +2.4 (0.22em)</div>
+          <div>For: section labels, status tags</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ VOICE & TONE -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">06 · Voice &amp; tone</div>
+      <h2>How we <em>sound.</em></h2>
+      <p class="desc">Nearfold writes like a thoughtful friend who runs the local boutique. Direct, warm, specific. Never bro-y, never corporate, never bossy. Concrete numbers beat vague promises.</p>
+    </div>
+
+    <div class="voice-grid">
+      <div class="voice-card do">
+        <div class="head">→ WE SAY</div>
+        <ul>
+          <li>Real shops, real makers, real close.</li>
+          <li>Shop your locality.</li>
+          <li>The kirana on your street, the pickle aunty next door.</li>
+          <li>Your order arrives in 28 minutes</li>
+          <li>156 followers · 4.8 stars · open now</li>
+          <li>Anita just confirmed your order</li>
+          <li>3.2 km away in your locality</li>
+          <li>Paid weekly via UPI, straight to your bank</li>
+        </ul>
+      </div>
+      <div class="voice-card dont">
+        <div class="head">× WE DON'T SAY</div>
+        <ul>
+          <li>The best hyperlocal commerce experience</li>
+          <li>Crafted with love and passion</li>
+          <li>Lightning-fast delivery, guaranteed</li>
+          <li>Authentic, traditional, homemade goodness</li>
+          <li>Join 1 million happy customers</li>
+          <li>Become a part of our family</li>
+          <li>Get amazing deals on everything</li>
+          <li>Experience the magic of local</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: var(--space-xl); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-base);">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--space-lg);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.18em;margin-bottom:var(--space-sm);">TONE PRINCIPLE 01</div>
+        <div style="font-family:'Fraunces',serif;font-weight:500;font-size:16px;color:var(--text-primary);margin-bottom:6px;">Specific over vague</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.55;">"28 minutes" not "fast delivery". "156 followers" not "lots of fans". "₹360 box of 12" not "great price".</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--space-lg);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.18em;margin-bottom:var(--space-sm);">TONE PRINCIPLE 02</div>
+        <div style="font-family:'Fraunces',serif;font-weight:500;font-size:16px;color:var(--text-primary);margin-bottom:6px;">Lowercase over title-case</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.55;">"home-made" not "Home-Made". "shop your locality" not "Shop Your Locality". Editorial restraint extends to capitalization.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--space-lg);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.18em;margin-bottom:var(--space-sm);">TONE PRINCIPLE 03</div>
+        <div style="font-family:'Fraunces',serif;font-weight:500;font-size:16px;color:var(--text-primary);margin-bottom:6px;">First-name over corporate-speak</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.55;">"Anita confirmed your order" not "Your order has been confirmed by the seller". Sellers have names.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ PHOTOGRAPHY STYLE -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">07 · Photography</div>
+      <h2>What Nearfold <em>looks like.</em></h2>
+      <p class="desc">Photography is documentary, not staged. Warm natural light over flash. Hands at work over polished product shots. Showing the maker over showing the product alone. The aesthetic is editorial — Bon Appetit, Aesop, Kinfolk — not e-commerce.</p>
+    </div>
+
+    <div class="photo-grid">
+      <div class="photo-card do">
+        <div class="ph">
+          <span class="badge">CORRECT</span>
+        </div>
+        <div class="meta">
+          <div class="t">Natural light, hands at work</div>
+          <div class="d">Warm window light from the side. The maker's hands centered, the product secondary. The story is human-led, not product-led.</div>
+        </div>
+      </div>
+      <div class="photo-card dont">
+        <div class="ph">
+          <span class="badge">WRONG</span>
+        </div>
+        <div class="meta">
+          <div class="t">Harsh flash, oversaturated</div>
+          <div class="d">Direct flash flattens the warmth. High-contrast / cold-tinted product photography reads as e-commerce, not editorial. Avoid.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: var(--space-xl); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-base);">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--space-lg);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--success);letter-spacing:0.18em;margin-bottom:var(--space-sm);">→ DO</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:var(--space-sm);">
+          <li style="font-size:13px;color:var(--text-secondary);">Window light, golden hour, side-lit shadows</li>
+          <li style="font-size:13px;color:var(--text-secondary);">Cream linen, dark slate, marble — natural surfaces</li>
+          <li style="font-size:13px;color:var(--text-secondary);">Hands kneading, piping, arranging — process shots</li>
+          <li style="font-size:13px;color:var(--text-secondary);">Shallow depth of field, intentional blur</li>
+          <li style="font-size:13px;color:var(--text-secondary);">Warm tones · cream, amber, saffron, deep brown</li>
+        </ul>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--space-lg);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--error);letter-spacing:0.18em;margin-bottom:var(--space-sm);">× DON'T</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:var(--space-sm);">
+          <li style="font-size:13px;color:var(--text-secondary);">On-camera flash, overhead studio light</li>
+          <li style="font-size:13px;color:var(--text-secondary);">White seamless backdrops (catalog-style)</li>
+          <li style="font-size:13px;color:var(--text-secondary);">Faces / smiling people (stock-feeling)</li>
+          <li style="font-size:13px;color:var(--text-secondary);">Over-saturated colors, HDR, filters</li>
+          <li style="font-size:13px;color:var(--text-secondary);">Cool tones · cyan, magenta, neon, electric</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ APPLICATIONS -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">08 · Applications</div>
+      <h2>The brand <em>in use.</em></h2>
+      <p class="desc">Where the logo and brand show up — app icon, favicon, marketing surfaces, packaging. Each application maintains the visual language: same colors, same proportions, same restraint.</p>
+    </div>
+
+    <div class="app-grid">
+      <div class="app-card">
+        <div class="preview">
+          <div class="app-icon">
+            <div class="ic-c ic-c1"></div>
+            <div class="ic-c ic-c2"></div>
+          </div>
+        </div>
+        <div class="nm">App icon</div>
+        <div class="sub">1024 × 1024</div>
+      </div>
+
+      <div class="app-card">
+        <div class="preview">
+          <div class="app-icon" style="width:48px;height:48px;border-radius:11px;">
+            <div class="ic-c ic-c1"></div>
+            <div class="ic-c ic-c2"></div>
+          </div>
+        </div>
+        <div class="nm">Notification icon</div>
+        <div class="sub">48 × 48</div>
+      </div>
+
+      <div class="app-card">
+        <div class="preview">
+          <div class="app-icon" style="width:24px;height:24px;border-radius:6px;">
+            <div class="ic-c ic-c1"></div>
+            <div class="ic-c ic-c2"></div>
+          </div>
+        </div>
+        <div class="nm">Favicon</div>
+        <div class="sub">16, 24, 32 px</div>
+      </div>
+
+      <div class="app-card">
+        <div class="preview" style="background:#F5F0E6;border-radius:var(--r-md);">
+          <div class="dl">
+            <div class="sym"><div class="circ" style="left:0;background:#1A1A1A;"></div><div class="circ" style="right:0;background:#FF8A3D;mix-blend-mode:multiply;"></div></div>
+            <div class="word" style="color:#1A1A1A;font-size:16px;">nearfold</div>
+          </div>
+        </div>
+        <div class="nm">Email header</div>
+        <div class="sub">CREAM CANVAS</div>
+      </div>
+
+      <div class="app-card">
+        <div class="preview" style="background:#0E0E0E;border-radius:var(--r-md);">
+          <div class="dl">
+            <div class="sym"><div class="circ" style="left:0;background:#F5F0E6;"></div><div class="circ" style="right:0;background:#FF8A3D;mix-blend-mode:screen;"></div></div>
+            <div class="word" style="color:#F5F0E6;font-size:16px;">nearfold</div>
+          </div>
+        </div>
+        <div class="nm">Social post header</div>
+        <div class="sub">DARK CANVAS</div>
+      </div>
+
+      <div class="app-card">
+        <div class="preview">
+          <div style="background:#F5F0E6;padding:14px 20px;border-radius:var(--r-md);font-family:'JetBrains Mono',monospace;font-size:11px;color:#1A1A1A;letter-spacing:0.04em;display:flex;align-items:center;gap:10px;">
+            <div style="width:20px;height:20px;position:relative;"><div style="position:absolute;top:50%;transform:translateY(-50%);width:13px;height:13px;border-radius:50%;left:0;background:#1A1A1A;"></div><div style="position:absolute;top:50%;transform:translateY(-50%);width:13px;height:13px;border-radius:50%;right:0;background:#FF8A3D;mix-blend-mode:multiply;"></div></div>
+            <span>#NFD8821 · ₹540</span>
+          </div>
+        </div>
+        <div class="nm">Order receipt</div>
+        <div class="sub">SMS / PRINT</div>
+      </div>
+
+      <div class="app-card">
+        <div class="preview" style="background:linear-gradient(180deg,#0E0E0E,#1A1A1A);border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+          <div class="dl">
+            <div class="sym"><div class="circ" style="left:0;background:#F5F0E6;"></div><div class="circ" style="right:0;background:#FF8A3D;mix-blend-mode:screen;"></div></div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#A8A29E;letter-spacing:0.22em;text-transform:uppercase;">DISCOVER HOME-MADE</div>
+        </div>
+        <div class="nm">Splash screen</div>
+        <div class="sub">APP LAUNCH</div>
+      </div>
+
+      <div class="app-card">
+        <div class="preview" style="background:#FF8A3D;color:#0E0E0E;font-family:'Inter',sans-serif;font-weight:600;font-size:13px;padding:10px 16px;border-radius:999px;">
+          Order placed · Anita confirmed
+        </div>
+        <div class="nm">Push notification</div>
+        <div class="sub">DEVICE TOAST</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container">Nearfold · Brand Book v1.0 · 2026</div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const label = document.getElementById('themeLabel');
+  const html = document.documentElement;
+  function flipTheme() {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    label.textContent = next.toUpperCase();
+  }
+  toggle.addEventListener('click', flipTheme);
+  toggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipTheme(); }
+  });
+</script>
+
+</body>
+</html>
