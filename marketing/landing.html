@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nearfold — Real shops, real makers, real close</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS — v2 warmer accent variety ============ */
+  [data-theme="dark"] {
+    --canvas: #0E0E0E; --surface: #161616; --card: #1A1A1A; --card-elevated: #222222;
+    --text-primary: #F5F0E6; --text-secondary: #C0B5A3; --text-muted: #756A5C; --text-inverse: #0E0E0E;
+    --border: rgba(245, 240, 230, 0.08); --border-strong: rgba(245, 240, 230, 0.18);
+    --screen-blend: screen;
+    --warm-1: #C2A883; /* secondary warm for v2 — sandstone */
+    --warm-2: #8B5E3C; /* tertiary — terracotta */
+  }
+  [data-theme="light"] {
+    --canvas: #F5F0E6; --surface: #FAF6EC; --card: #FFFFFF; --card-elevated: #FCFAF3;
+    --text-primary: #1A1A1A; --text-secondary: #4A4338; --text-muted: #8E8275; --text-inverse: #F5F0E6;
+    --border: rgba(26, 26, 26, 0.08); --border-strong: rgba(26, 26, 26, 0.18);
+    --screen-blend: multiply;
+    --warm-1: #8B6F4E;
+    --warm-2: #6B4A2A;
+  }
+  :root {
+    --accent: #FF8A3D; --accent-soft: rgba(255, 138, 61, 0.16); --accent-deeper: #E8732B;
+    --space-xs: 4px; --space-sm: 8px; --space-md: 12px; --space-base: 16px;
+    --space-lg: 24px; --space-xl: 32px; --space-xxl: 48px; --space-xxxl: 64px; --space-huge: 96px;
+    --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-pill: 999px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--canvas); color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    transition: background 400ms cubic-bezier(0.2,0,0,1), color 400ms cubic-bezier(0.2,0,0,1);
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 6vw; }
+  .container-tight { max-width: 1100px; margin: 0 auto; padding: 0 6vw; }
+  .container-narrow { max-width: 760px; margin: 0 auto; padding: 0 6vw; }
+
+  /* ============ TYPE — heavy italic, magazine-like ============ */
+  /* note — upright Fraunces, small */
+  .note {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 14px; color: var(--accent);
+    letter-spacing: 0.01em;
+  }
+  .note::before { content: "— "; }
+  .display {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(3.5rem, 11vw, 10rem);
+    line-height: 0.88; letter-spacing: -0.045em;
+  }
+  .display em {
+    font-style: italic; color: var(--accent); font-weight: 300;
+  }
+  .display .alt-emph {
+    font-style: italic; font-weight: 400; color: var(--warm-1);
+  }
+  .h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+    line-height: 1.02; letter-spacing: -0.03em;
+  }
+  .h2 em { font-style: italic; color: var(--accent); }
+  .h2 .alt { color: var(--warm-1); font-style: italic; }
+  .h3 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: clamp(1.4rem, 2vw, 2rem); line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+  .h3 em { font-style: italic; color: var(--accent); }
+  .lede {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(1.15rem, 1.7vw, 1.5rem); color: var(--text-secondary);
+    line-height: 1.5; letter-spacing: -0.005em;
+  }
+  .lede em { font-style: italic; color: var(--text-primary); font-weight: 400; }
+  .body { font-size: 16px; color: var(--text-secondary); line-height: 1.65; }
+  .body em { font-style: italic; color: var(--text-primary); }
+
+  /* pull quote */
+  .pull-quote {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.1;
+    letter-spacing: -0.028em;
+    color: var(--text-primary);
+  }
+  .pull-quote .attr {
+    display: block; margin-top: var(--space-base);
+    font-size: 14px; font-style: normal; font-weight: 500;
+    color: var(--text-muted); letter-spacing: 0;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* drop cap */
+  .dropcap::first-letter {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: 5em; line-height: 0.85; float: left;
+    margin: 0.05em 0.12em -0.1em 0;
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  /* ============ ORNAMENTS ============ */
+  .orn {
+    display: inline-block; position: relative;
+  }
+  .orn-circles {
+    width: 36px; height: 18px; position: relative;
+  }
+  .orn-circles::before, .orn-circles::after {
+    content: ""; position: absolute; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px; border-radius: 50%;
+  }
+  .orn-circles::before { left: 0; background: var(--text-primary); }
+  .orn-circles::after { right: 0; background: var(--accent); mix-blend-mode: var(--screen-blend); }
+  .orn-circles.lg { width: 64px; height: 32px; }
+  .orn-circles.lg::before, .orn-circles.lg::after { width: 32px; height: 32px; }
+
+  .orn-asterism {
+    color: var(--accent); font-family: 'Fraunces', serif;
+    font-size: 1.5em; line-height: 1; letter-spacing: 0.1em;
+  }
+
+  .orn-rule {
+    display: flex; align-items: center; gap: var(--space-base);
+    color: var(--accent);
+  }
+  .orn-rule::before, .orn-rule::after {
+    content: ""; flex: 1; height: 1px; background: currentColor; opacity: 0.4;
+  }
+
+  /* ============ NAV ============ */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(20px) saturate(120%);
+    background: color-mix(in srgb, var(--canvas) 75%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  nav.top .inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0;
+  }
+  nav.top .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  nav.top .logo-sym { width: 28px; height: 28px; position: relative; }
+  nav.top .logo-sym .c {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px; border-radius: 50%;
+  }
+  nav.top .logo-sym .c1 { left: 0; background: var(--text-primary); }
+  nav.top .logo-sym .c2 { right: 0; background: var(--accent); mix-blend-mode: var(--screen-blend); }
+  nav.top .logo-word {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 24px;
+    color: var(--text-primary); letter-spacing: -0.04em;
+  }
+  nav.top .links { display: flex; align-items: center; gap: var(--space-xl); }
+  @media (max-width: 800px) {
+    nav.top .links { gap: var(--space-base); }
+    nav.top .links .link.hide-mobile { display: none; }
+  }
+  nav.top .link {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 16px; color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 150ms;
+  }
+  nav.top .link:hover { color: var(--accent); }
+  nav.top .cta {
+    padding: 10px 22px;
+    background: var(--accent); color: var(--text-inverse);
+    border: none; border-radius: var(--r-pill);
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 150ms cubic-bezier(0.2,0,0,1.15);
+  }
+  nav.top .cta:hover { transform: scale(1.03); }
+  nav.top .theme-tog {
+    width: 32px; height: 20px; background: var(--accent);
+    border-radius: var(--r-pill); position: relative; cursor: pointer;
+  }
+  nav.top .theme-tog::after {
+    content: ""; width: 14px; height: 14px; background: var(--text-inverse);
+    border-radius: 50%; position: absolute; top: 3px; left: 3px;
+    transition: transform 250ms cubic-bezier(0.2,0,0,1.15);
+  }
+  [data-theme="light"] nav.top .theme-tog::after { transform: translateX(12px); }
+
+  /* ============ HERO — asymmetric editorial spread ============ */
+  header.hero {
+    padding: 6vw 0 12vw;
+    position: relative; overflow: hidden;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.4fr 1fr;
+    gap: 4vw;
+    align-items: center;
+    position: relative;
+    min-height: 70vh;
+  }
+  @media (max-width: 880px) {
+    .hero-grid { grid-template-columns: 1fr; }
+  }
+  .hero-text { position: relative; z-index: 2; }
+  .hero-text .display { margin: 0 0 var(--space-xxl); }
+  .hero-text .display .breaker { display: block; }
+  .hero-text .lede { max-width: 36ch; margin-bottom: var(--space-xxl); }
+  .hero-cta-row {
+    display: flex; gap: var(--space-base); align-items: center; flex-wrap: wrap;
+  }
+  .btn-primary {
+    padding: 18px 32px;
+    background: var(--accent); color: var(--text-inverse);
+    border: none; border-radius: var(--r-pill);
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px;
+    letter-spacing: 0.01em;
+    cursor: pointer; text-decoration: none;
+    transition: transform 150ms cubic-bezier(0.2,0,0,1.15),
+                box-shadow 250ms cubic-bezier(0.2,0,0,1);
+    box-shadow: 0 8px 32px rgba(255,138,61,0.3);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-primary:hover { box-shadow: 0 16px 48px rgba(255,138,61,0.5); transform: translateY(-2px); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-link {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    font-size: 15px; color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+    transition: color 150ms;
+  }
+  .btn-link:hover { color: var(--accent); }
+
+  /* Hero photo cluster — asymmetric */
+  .hero-photos {
+    position: relative;
+    aspect-ratio: 4/5;
+    width: 100%;
+  }
+  .hero-photo-main {
+    position: absolute; inset: 0;
+    border-radius: 6px;
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/cdc16df8-4aca-453f-907c-1babb79d3e13.png");
+    background-size: cover; background-position: center;
+    background-color: var(--warm-1);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    transform: rotate(-2deg);
+    z-index: 2;
+  }
+  .hero-photo-small {
+    position: absolute;
+    width: 45%; aspect-ratio: 3/4;
+    border-radius: 6px;
+    background-size: cover; background-position: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    z-index: 3;
+  }
+  .hero-photo-small.tl {
+    top: -8%; left: -12%;
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/64fca767-7eca-4db8-a585-e29e62f9c853.png");
+    transform: rotate(-6deg);
+  }
+  .hero-photo-small.br {
+    bottom: -10%; right: -12%; width: 55%;
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/89006925-e546-442f-856f-d6143fab04fc.png");
+    transform: rotate(3deg);
+  }
+  /* floating brand mark behind hero text */
+  .hero-watermark {
+    position: absolute; top: 20%; left: -10%;
+    width: 65vw; height: 65vw; max-width: 800px; max-height: 800px;
+    pointer-events: none;
+    opacity: 0.06; z-index: 1;
+  }
+  .hero-watermark .c {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 45%; aspect-ratio: 1; border-radius: 50%;
+  }
+  .hero-watermark .c1 { left: 0; background: var(--text-primary); }
+  .hero-watermark .c2 { right: 0; background: var(--accent); }
+
+  /* small floating tile on hero photo */
+  .hero-tile {
+    position: absolute; bottom: 22%; right: -8%;
+    background: color-mix(in srgb, var(--card) 90%, transparent);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 14px 18px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    z-index: 4;
+    transform: rotate(2deg);
+  }
+  .hero-tile .av {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deeper));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; color: var(--text-inverse); font-size: 16px;
+    flex-shrink: 0;
+  }
+  .hero-tile .info .nm {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 15px;
+    color: var(--text-primary); letter-spacing: -0.01em;
+  }
+  .hero-tile .info .sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted);
+    margin-top: 3px; letter-spacing: 0.08em;
+  }
+  .hero-tile .pill {
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    color: #4FCD7E;
+  }
+
+  /* HERO QUICK STATS — set inline like editorial column */
+  .hero-stats-line {
+    margin-top: 6vw;
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border);
+    display: flex; gap: 3vw; flex-wrap: wrap;
+  }
+  .hero-stats-line .stat .v {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem); line-height: 1;
+    color: var(--accent); letter-spacing: -0.025em;
+  }
+  .hero-stats-line .stat .l {
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    font-size: 13px; color: var(--text-muted);
+    margin-top: 8px; line-height: 1.5;
+  }
+
+  /* ============ MANIFESTO ============ */
+  section.manifesto {
+    padding: 12vw 0; position: relative; overflow: hidden;
+    border-top: 1px solid var(--border);
+  }
+  .manifesto-grid {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    gap: 6vw; align-items: start;
+  }
+  @media (max-width: 880px) {
+    .manifesto-grid { grid-template-columns: 1fr; }
+  }
+  .manifesto .note { margin-bottom: var(--space-xl); }
+  .manifesto .h2 { margin-bottom: var(--space-xl); }
+  .manifesto-side {
+    padding-top: 8vw;
+  }
+  @media (max-width: 880px) {
+    .manifesto-side { padding-top: 0; }
+  }
+  .manifesto-side .body { font-size: 18px; line-height: 1.65; }
+  .manifesto-side .body p { margin-bottom: var(--space-base); }
+
+  /* ============ WHO SELLS — asymmetric mosaic ============ */
+  section.who-sells {
+    padding: 10vw 0;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .who-header { max-width: 600px; margin-bottom: var(--space-xxxl); }
+  .who-header .note { margin-bottom: var(--space-base); }
+  .who-mosaic {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-base);
+  }
+  @media (max-width: 880px) {
+    .who-mosaic { grid-template-columns: 1fr; }
+  }
+  .who-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+    transition: transform 250ms cubic-bezier(0.2,0,0,1.15);
+  }
+  .who-card:hover { transform: translateY(-4px); }
+  .who-card.big { grid-column: span 7; }
+  .who-card.small { grid-column: span 5; }
+  .who-card.med { grid-column: span 6; }
+  @media (max-width: 880px) {
+    .who-card.big, .who-card.small, .who-card.med { grid-column: span 1; }
+  }
+  .who-card .ph {
+    background-size: cover; background-position: center;
+    background-color: var(--warm-1);
+    height: 320px;
+  }
+  .who-card.big .ph { height: 420px; }
+  .who-card .meta {
+    padding: var(--space-xl);
+  }
+  .who-card .who-name {
+    font-family: 'Fraunces', serif; font-weight: 400; font-size: 24px;
+    color: var(--text-primary);
+    margin-bottom: 6px; letter-spacing: -0.015em;
+  }
+  .who-card .who-name em { font-style: italic; color: var(--accent); }
+  .who-card .who-tag {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 14px;
+    color: var(--text-muted); margin-bottom: var(--space-base);
+  }
+  .who-card .who-line {
+    font-size: 14px; color: var(--text-secondary); line-height: 1.55;
+  }
+
+  /* ============ PULL QUOTE BLOCK ============ */
+  section.quote-block {
+    padding: 14vw 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    position: relative;
+  }
+  .quote-block .orn-asterism { display: inline-block; margin-bottom: var(--space-xl); font-size: 2rem; }
+  .quote-block .pull-quote { max-width: 22ch; margin: 0 auto; }
+  .quote-block .pull-quote em { color: var(--accent); }
+  .quote-block .quote-photos {
+    margin-top: var(--space-xxxl);
+    display: flex; justify-content: center; gap: var(--space-base);
+  }
+  .quote-block .qp {
+    width: 84px; height: 84px; border-radius: 50%;
+    background-size: cover; background-position: center;
+    background-color: var(--warm-1);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  }
+  .quote-block .qp:nth-child(1) {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/cdc16df8-4aca-453f-907c-1babb79d3e13.png");
+  }
+  .quote-block .qp:nth-child(2) {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/64fca767-7eca-4db8-a585-e29e62f9c853.png");
+    transform: scale(1.15);
+  }
+  .quote-block .qp:nth-child(3) {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/89006925-e546-442f-856f-d6143fab04fc.png");
+  }
+
+  /* ============ HOW IT WORKS — narrative not list ============ */
+  section.how {
+    padding: 10vw 0;
+    border-top: 1px solid var(--border);
+  }
+  .how-header { max-width: 600px; margin-bottom: var(--space-xxxl); }
+  .how-header .note { margin-bottom: var(--space-base); }
+  .how-narrative {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xxxl);
+    position: relative;
+  }
+  @media (max-width: 880px) {
+    .how-narrative { grid-template-columns: 1fr; gap: var(--space-xl); }
+  }
+  .how-step {
+    position: relative;
+  }
+  .how-step .step-mark {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1;
+    color: var(--accent);
+    margin-bottom: var(--space-lg);
+  }
+  .how-step .h3 { margin-bottom: var(--space-base); }
+  .how-step .body { font-size: 15px; }
+  .how-step .body em { color: var(--text-primary); font-style: italic; }
+
+  /* ============ SELLER PIVOT — warm gradient editorial ============ */
+  section.sellers {
+    padding: 12vw 0;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deeper) 100%);
+    color: var(--text-inverse);
+    position: relative; overflow: hidden;
+  }
+  section.sellers::before {
+    content: ""; position: absolute; top: -30%; right: -10%;
+    width: 60%; height: 200%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.18), transparent 60%);
+    pointer-events: none;
+  }
+  section.sellers .container { position: relative; z-index: 1; }
+  .sellers-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6vw; align-items: center;
+  }
+  @media (max-width: 880px) { .sellers-grid { grid-template-columns: 1fr; } }
+  .sellers .note { color: rgba(14,14,14,0.7); }
+  .sellers .h2 { color: var(--text-inverse); margin-bottom: var(--space-xl); }
+  .sellers .h2 em { color: var(--text-inverse); opacity: 0.85; }
+  .sellers .lede { color: var(--text-inverse); opacity: 0.92; margin-bottom: var(--space-xxl); }
+  .sellers .lede em { color: var(--text-inverse); opacity: 1; }
+  .sellers-cta {
+    background: var(--text-inverse); color: var(--accent-deeper);
+    border: none; padding: 18px 32px;
+    border-radius: var(--r-pill);
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px;
+    letter-spacing: 0.01em;
+    cursor: pointer; text-decoration: none;
+    box-shadow: 0 12px 32px rgba(14,14,14,0.3);
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: transform 150ms cubic-bezier(0.2,0,0,1.15),
+                box-shadow 250ms cubic-bezier(0.2,0,0,1);
+  }
+  .sellers-cta:hover { transform: scale(1.03); box-shadow: 0 20px 48px rgba(14,14,14,0.45); }
+  .sellers-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl) var(--space-xxxl);
+  }
+  .sellers-stats .ss .v {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1;
+    color: var(--text-inverse); letter-spacing: -0.04em;
+  }
+  .sellers-stats .ss .l {
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    color: rgba(14,14,14,0.75); margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ============ CITIES — abstract not literal ============ */
+  section.cities {
+    padding: 10vw 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .cities .note { margin-bottom: var(--space-base); }
+  .cities .h2 { margin-bottom: var(--space-base); }
+  .cities .lede { max-width: 50ch; margin: 0 auto var(--space-xxl); }
+  .cities-row {
+    display: flex; flex-wrap: wrap; gap: var(--space-base);
+    justify-content: center;
+    margin-top: var(--space-xl);
+  }
+  .city-tag {
+    padding: 12px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-pill);
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 16px; color: var(--text-primary); letter-spacing: -0.01em;
+    transition: border-color 250ms cubic-bezier(0.2,0,0,1),
+                transform 150ms cubic-bezier(0.2,0,0,1.15);
+  }
+  .city-tag:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .city-tag.your {
+    background: var(--accent); color: var(--text-inverse); border-color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ============ WAITLIST ============ */
+  section.waitlist {
+    padding: 14vw 0; text-align: center;
+    position: relative; overflow: hidden;
+    border-top: 1px solid var(--border);
+  }
+  section.waitlist::before {
+    content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 70vw; height: 70vw; max-width: 700px; max-height: 700px;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .waitlist .container-narrow { position: relative; z-index: 1; }
+  .waitlist .note { margin-bottom: var(--space-base); }
+  .waitlist .display { font-size: clamp(2.5rem, 7vw, 6rem); margin-bottom: var(--space-xl); }
+  .waitlist .lede { margin: 0 auto var(--space-xxxl); max-width: 50ch; }
+  .waitlist-form {
+    max-width: 480px; margin: 0 auto;
+    display: flex; gap: var(--space-sm);
+    padding: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-pill);
+  }
+  @media (max-width: 600px) {
+    .waitlist-form { flex-direction: column; padding: var(--space-base); border-radius: var(--r-md); }
+  }
+  .waitlist-form input {
+    flex: 1; padding: 16px 22px;
+    background: transparent; border: none; outline: none;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif; font-size: 16px;
+  }
+  .waitlist-form input::placeholder { color: var(--text-muted); }
+  .waitlist-form button {
+    padding: 14px 28px;
+    background: var(--accent); color: var(--text-inverse);
+    border: none; border-radius: var(--r-pill);
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: transform 150ms cubic-bezier(0.2,0,0,1.15),
+                box-shadow 250ms cubic-bezier(0.2,0,0,1);
+    box-shadow: 0 8px 24px rgba(255,138,61,0.3);
+  }
+  .waitlist-form button:hover { transform: scale(1.04); box-shadow: 0 12px 32px rgba(255,138,61,0.5); }
+  .waitlist-fineprint {
+    margin-top: var(--space-lg);
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ============ FOOTER ============ */
+  footer.bottom {
+    padding: 10vw 0 var(--space-xl);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--space-xxxl);
+    margin-bottom: var(--space-xxxl);
+  }
+  @media (max-width: 880px) { .footer-top { grid-template-columns: 1fr 1fr; gap: var(--space-xl); } }
+  .footer-brand .logo { display: flex; align-items: center; gap: 10px; margin-bottom: var(--space-base); }
+  .footer-brand .logo-sym { width: 28px; height: 28px; position: relative; }
+  .footer-brand .logo-sym .c { position: absolute; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; border-radius: 50%; }
+  .footer-brand .logo-sym .c1 { left: 0; background: var(--text-primary); }
+  .footer-brand .logo-sym .c2 { right: 0; background: var(--accent); mix-blend-mode: var(--screen-blend); }
+  .footer-brand .logo-word { font-family: 'Fraunces', serif; font-weight: 300; font-size: 22px; color: var(--text-primary); letter-spacing: -0.04em; }
+  .footer-brand .blurb {
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    color: var(--text-secondary); line-height: 1.65; max-width: 32ch;
+  }
+  .footer-col h4 {
+    font-family: 'Inter', sans-serif; font-weight: 600;
+    font-size: 11px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: var(--space-base);
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { padding: 5px 0; }
+  .footer-col a {
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    font-size: 14px; color: var(--text-secondary); text-decoration: none;
+    transition: color 150ms;
+  }
+  .footer-col a:hover { color: var(--accent); }
+  .footer-bottom {
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-base);
+  }
+  .footer-bottom .copy {
+    font-family: 'Inter', sans-serif; font-size: 12px; color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .footer-bottom .socials { display: flex; gap: var(--space-base); }
+  .footer-bottom .socials a {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--card-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif; font-weight: 500; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    transition: all 150ms;
+  }
+  .footer-bottom .socials a:hover { background: var(--accent); color: var(--text-inverse); border-color: var(--accent); transform: translateY(-2px); }
+
+  /* ============================================================
+     ANIMATIONS — subtle, attention-pulling, never distracting
+     ============================================================ */
+
+  /* Respect user's motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* Fade-in-on-scroll · default state */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms cubic-bezier(0.2, 0, 0, 1),
+                transform 700ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Stagger when applied via CSS — children of .fade-stagger animate in sequence */
+  .fade-stagger > .fade-in.visible:nth-child(1) { transition-delay: 0ms; }
+  .fade-stagger > .fade-in.visible:nth-child(2) { transition-delay: 90ms; }
+  .fade-stagger > .fade-in.visible:nth-child(3) { transition-delay: 180ms; }
+  .fade-stagger > .fade-in.visible:nth-child(4) { transition-delay: 270ms; }
+  .fade-stagger > .fade-in.visible:nth-child(5) { transition-delay: 360ms; }
+  .fade-stagger > .fade-in.visible:nth-child(6) { transition-delay: 450ms; }
+
+  /* Hero watermark — gentle breathing */
+  .hero-watermark { animation: hero-watermark-pulse 8s ease-in-out infinite; }
+  @keyframes hero-watermark-pulse {
+    0%, 100% { opacity: 0.06; transform: scale(1); }
+    50%      { opacity: 0.09; transform: scale(1.03); }
+  }
+
+  /* Hero photo gentle float — each photo drifts independently */
+  .hero-photo-main { animation: photo-float-1 9s ease-in-out infinite; }
+  .hero-photo-small.tl { animation: photo-float-2 11s ease-in-out infinite; }
+  .hero-photo-small.br { animation: photo-float-3 13s ease-in-out infinite; }
+  @keyframes photo-float-1 {
+    0%, 100% { transform: rotate(-2deg) translateY(0); }
+    50%      { transform: rotate(-1.5deg) translateY(-8px); }
+  }
+  @keyframes photo-float-2 {
+    0%, 100% { transform: rotate(-6deg) translateY(0); }
+    50%      { transform: rotate(-5deg) translateY(-12px); }
+  }
+  @keyframes photo-float-3 {
+    0%, 100% { transform: rotate(3deg) translateY(0); }
+    50%      { transform: rotate(3.5deg) translateY(-10px); }
+  }
+
+  /* Hero tile gentle pulse — the floating shop card */
+  .hero-tile { animation: tile-pulse 4s ease-in-out infinite; }
+  @keyframes tile-pulse {
+    0%, 100% { transform: rotate(2deg) translateY(0); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    50%      { transform: rotate(2deg) translateY(-3px); box-shadow: 0 28px 70px rgba(0,0,0,0.55); }
+  }
+
+  /* Open-now indicator pulse — green dot in hero tile */
+  .hero-tile .pill { animation: dot-pulse 2.4s ease-in-out infinite; }
+  @keyframes dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.6; transform: scale(1.18); }
+  }
+
+  /* Primary CTA — subtle saffron glow that breathes */
+  .btn-primary { animation: cta-breathe 3.6s ease-in-out infinite; }
+  @keyframes cta-breathe {
+    0%, 100% { box-shadow: 0 8px 32px rgba(255,138,61,0.30); }
+    50%      { box-shadow: 0 14px 44px rgba(255,138,61,0.45); }
+  }
+  .btn-primary:hover { animation: none; } /* hover overrides */
+
+  /* Logo in nav — hover-only subtle wiggle on the saffron circle */
+  nav.top .logo:hover .logo-sym .c2 {
+    animation: logo-wiggle 600ms cubic-bezier(0.2,0,0,1.15);
+  }
+  @keyframes logo-wiggle {
+    0% { transform: translateY(-50%) translateX(0); }
+    35% { transform: translateY(-50%) translateX(-2px); }
+    70% { transform: translateY(-50%) translateX(2px); }
+    100% { transform: translateY(-50%) translateX(0); }
+  }
+
+  /* Asterism in pull quote — subtle rotation */
+  .quote-block .orn-asterism {
+    display: inline-block; animation: asterism-rotate 12s linear infinite;
+  }
+  @keyframes asterism-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Stat values — count-up animation handled in JS, no CSS needed beyond fade-in */
+
+  /* Mosaic card — enhanced hover with image scale */
+  .who-card { overflow: hidden; position: relative; }
+  .who-card .ph { transition: transform 800ms cubic-bezier(0.2,0,0,1); }
+  .who-card:hover .ph { transform: scale(1.04); }
+
+  /* Cities tag subtle stagger when entering view */
+  .cities-row .city-tag.fade-in.visible:nth-child(1) { transition-delay: 0ms; }
+  .cities-row .city-tag.fade-in.visible:nth-child(2) { transition-delay: 80ms; }
+  .cities-row .city-tag.fade-in.visible:nth-child(3) { transition-delay: 160ms; }
+  .cities-row .city-tag.fade-in.visible:nth-child(4) { transition-delay: 240ms; }
+
+  /* Smooth section background transitions */
+  section { transition: background 400ms cubic-bezier(0.2, 0, 0, 1); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="container inner">
+    <a href="#" class="logo">
+      <div class="logo-sym"><div class="c c1"></div><div class="c c2"></div></div>
+      <div class="logo-word">nearfold</div>
+    </a>
+    <div class="links">
+      <a href="#manifesto" class="link hide-mobile">Why</a>
+      <a href="#sellers" class="link hide-mobile">For sellers</a>
+      <a href="#cities" class="link hide-mobile">Cities</a>
+      <div class="theme-tog" id="themeToggle" role="button" tabindex="0"></div>
+      <a href="#waitlist" class="cta">Get notified</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-watermark" aria-hidden="true">
+    <div class="c c1"></div>
+    <div class="c c2"></div>
+  </div>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="note fade-in" style="margin-bottom: var(--space-xl);">a hyperlocal marketplace, in your locality</div>
+        <h1 class="display fade-in">Real shops,<br/><span class="alt-emph">real makers,</span><br/><em>real close.</em></h1>
+        <p class="lede fade-in">From the kirana on your street, the home baker two lanes over, the pickle <em>aunty</em> next door, the craft maker selling on Instagram — all in one app. Five kilometres, ninety minutes, your locality.</p>
+        <div class="hero-cta-row fade-in">
+          <a href="#waitlist" class="btn-primary">Get the app, when we launch →</a>
+          <a href="#sellers" class="btn-link">I want to sell on Nearfold</a>
+        </div>
+      </div>
+
+      <div class="hero-photos">
+        <div class="hero-photo-small tl"></div>
+        <div class="hero-photo-main"></div>
+        <div class="hero-photo-small br"></div>
+        <div class="hero-tile">
+          <div class="av">A</div>
+          <div class="info">
+            <div class="nm">Anita's Bakery</div>
+            <div class="sub">2 KM AWAY · OPEN</div>
+          </div>
+          <div class="pill">●</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-stats-line fade-stagger">
+      <div class="stat fade-in">
+        <div class="v" data-count-to="5" data-suffix=" km">5 km</div>
+        <div class="l">delivery radius, locality-first</div>
+      </div>
+      <div class="stat fade-in">
+        <div class="v" data-count-to="90" data-prefix="~" data-suffix=" min">~90 min</div>
+        <div class="l">from tap to your door</div>
+      </div>
+      <div class="stat fade-in">
+        <div class="v">Weekly</div>
+        <div class="l">UPI payouts to sellers, every Monday</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- MANIFESTO -->
+<section class="manifesto" id="manifesto">
+  <div class="container">
+    <div class="manifesto-grid">
+      <div>
+        <div class="note fade-in">a small manifesto</div>
+        <h2 class="h2 fade-in">We don't believe in <em>"hyperlocal"</em> as a marketing word.</h2>
+      </div>
+      <div class="manifesto-side fade-in">
+        <div class="body">
+          <p class="dropcap">We believe in the bakery on your street that doesn't have an app. The pickle aunty whose orders happen on WhatsApp. The craft maker selling DM-to-DM on Instagram. The corner sweet shop that has been there forty years and still uses a paper notebook.</p>
+          <p>Nearfold is for them. And for you — the person who lives nearby and would much rather buy from a real shop run by a real person than from a faceless catalog.</p>
+          <p>We're not trying to replace the shops next door. We're trying to put them in your pocket, exactly as they are.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WHO SELLS — asymmetric mosaic -->
+<section class="who-sells">
+  <div class="container">
+    <div class="who-header">
+      <div class="note fade-in">the people on Nearfold</div>
+      <h2 class="h2 fade-in">Home makers, <em>local shops,</em><br/>and everyone in <span class="alt">between.</span></h2>
+    </div>
+    <div class="who-mosaic fade-stagger">
+      <!-- big card: bakery -->
+      <div class="who-card big fade-in">
+        <div class="ph" style="background-image: url('https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/cdc16df8-4aca-453f-907c-1babb79d3e13.png');"></div>
+        <div class="meta">
+          <div class="who-name">Home <em>bakers.</em></div>
+          <div class="who-tag">cardamom cookies · sourdough · birthday cakes · sweet boxes</div>
+          <div class="who-line">Anita started baking out of her flat in 2022. By month four she'd quit her old job. Three hundred-and-eighty followers. A waitlist for festival orders. The aunties on her floor know her by name.</div>
+        </div>
+      </div>
+
+      <!-- small card: kirana -->
+      <div class="who-card small fade-in">
+        <div class="ph" style="background-image: url('https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/89006925-e546-442f-856f-d6143fab04fc.png');"></div>
+        <div class="meta">
+          <div class="who-name">The shop <em>on your street.</em></div>
+          <div class="who-tag">kirana · sweet shops · tea stalls · boutiques · ateliers</div>
+          <div class="who-line">Karan's family has run the corner store since '79. He still hand-writes invoices. Nearfold's his first time online — no website needed, just open the seller app and start.</div>
+        </div>
+      </div>
+
+      <!-- med card: craft maker -->
+      <div class="who-card med fade-in">
+        <div class="ph" style="background-image: url('https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/64fca767-7eca-4db8-a585-e29e62f9c853.png');"></div>
+        <div class="meta">
+          <div class="who-name">Craft <em>makers.</em></div>
+          <div class="who-tag">hand-painted pottery · block-print textiles · jewelry · candles</div>
+          <div class="who-line">Meera was selling on Instagram, juggling DMs and screenshots of UPI payments. Now her shop opens at 9 AM, closes at 6 PM, ships within the city the same day.</div>
+        </div>
+      </div>
+
+      <!-- med card: pickle aunty -->
+      <div class="who-card med fade-in">
+        <div class="ph" style="background: linear-gradient(135deg, #C2A883, #8B5A3C);"></div>
+        <div class="meta">
+          <div class="who-name">Pickle <em>aunties</em> &amp; tiffin <em>uncles.</em></div>
+          <div class="who-tag">homemade pickle · tiffin · gunpowder · ghee · masalas</div>
+          <div class="who-line">Priya makes mango achaar from her grandmother's recipe. Used to be a WhatsApp broadcast list. Now four hundred and twelve regulars get the next batch alert in-app.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PULL QUOTE BLOCK -->
+<section class="quote-block">
+  <div class="container-narrow">
+    <div class="orn-asterism fade-in">✻</div>
+    <div class="pull-quote fade-in">
+      "I quit Instagram for orders. Now I just <em>bake.</em>"
+      <span class="attr">Anita, home baker · on Nearfold since launch week</span>
+    </div>
+    <div class="quote-photos fade-in">
+      <div class="qp"></div>
+      <div class="qp"></div>
+      <div class="qp"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- HOW IT WORKS — narrative not list -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="how-header">
+      <div class="note fade-in">how it works, for buyers</div>
+      <h2 class="h2 fade-in">Three taps. <em>Or none, if you're a regular.</em></h2>
+    </div>
+    <div class="how-narrative fade-stagger">
+      <div class="how-step fade-in">
+        <div class="step-mark">First,</div>
+        <h3 class="h3">you open the app and Nearfold knows where you are.</h3>
+        <p class="body">No category lists, no city pickers, no faff. Just <em>shops near you that are open right now</em> — sorted by what's closest and who you've ordered from before.</p>
+      </div>
+      <div class="how-step fade-in">
+        <div class="step-mark">Then,</div>
+        <h3 class="h3">you pick what you want and how to pay.</h3>
+        <p class="body">UPI or Razorpay if you like things fast. Cash on delivery if you'd rather pay <em>when they arrive.</em> No platform-mandated discounts. No surge.</p>
+      </div>
+      <div class="how-step fade-in">
+        <div class="step-mark">Finally,</div>
+        <h3 class="h3">they bring it to your door, <em>themselves.</em></h3>
+        <p class="body">Sellers deliver their own orders within 5 km. Mostly on a scooter, sometimes on foot, occasionally by their teenage cousin. The seller's name is on the order. You can message them.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SELLER PIVOT -->
+<section class="sellers" id="sellers">
+  <div class="container">
+    <div class="sellers-grid">
+      <div>
+        <div class="note fade-in">for sellers</div>
+        <h2 class="h2 fade-in">If you're already selling on <em>Insta or WhatsApp</em>, move it here.</h2>
+        <p class="lede fade-in">Same setup time as a Linktree. Set your own hours. Set your own prices. Deliver yourself, in <em>your locality.</em> We're pre-launch — tell us you sell, we'll let you in early.</p>
+        <a href="#waitlist" class="sellers-cta fade-in">Join the seller waitlist →</a>
+      </div>
+
+      <div class="sellers-stats fade-stagger">
+        <div class="ss fade-in">
+          <div class="v">100%</div>
+          <div class="l">of your inventory and hours stay with you — we're a counter, not a manager</div>
+        </div>
+        <div class="ss fade-in">
+          <div class="v">5 km</div>
+          <div class="l">delivery radius you set — your locality, your reach</div>
+        </div>
+        <div class="ss fade-in">
+          <div class="v">Mon</div>
+          <div class="l">weekly UPI payouts, straight to your bank, every Monday morning</div>
+        </div>
+        <div class="ss fade-in">
+          <div class="v">4 min</div>
+          <div class="l">to set up a shop and start accepting orders the same day</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CITIES -->
+<section class="cities" id="cities">
+  <div class="container-narrow">
+    <div class="note fade-in">where we'll be</div>
+    <h2 class="h2 fade-in">In your city, <em>soon.</em></h2>
+    <p class="lede fade-in">We're starting where local makers and small shops are strongest and delivery distances stay short. Tell us your locality and we'll come for you.</p>
+    <div class="cities-row">
+      <span class="city-tag your fade-in">Your city · tell us →</span>
+      <span class="city-tag fade-in">Tier 2 India, first</span>
+      <span class="city-tag fade-in">Metros, later</span>
+      <span class="city-tag fade-in">Wherever shops are local</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- WAITLIST -->
+<section class="waitlist" id="waitlist">
+  <div class="container-narrow">
+    <div class="note fade-in">get notified when we launch in your city</div>
+    <h1 class="display fade-in"><em>Be first.</em></h1>
+    <p class="lede fade-in">Drop your number. We'll text you the install link when we go live in your locality. One SMS, that's it — we don't have time for newsletters.</p>
+    <form class="waitlist-form fade-in" onsubmit="event.preventDefault();">
+      <input type="tel" placeholder="+91 — your number" />
+      <button type="submit">Notify me →</button>
+    </form>
+    <div class="waitlist-fineprint fade-in">— one message, the day we open in your locality</div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="bottom">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo" style="text-decoration:none;">
+          <div class="logo-sym"><div class="c c1"></div><div class="c c2"></div></div>
+          <div class="logo-word">nearfold</div>
+        </a>
+        <div class="blurb">A hyperlocal marketplace for home makers, local shops, and the people who buy from them. Built in India.</div>
+      </div>
+      <div class="footer-col">
+        <h4>For buyers</h4>
+        <ul>
+          <li><a href="#manifesto">Why Nearfold</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#waitlist">Get the app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For sellers</h4>
+        <ul>
+          <li><a href="#sellers">Join the seller waitlist</a></li>
+          <li><a href="#">How payouts work</a></li>
+          <li><a href="#">Seller stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Nearfold · made with care</div>
+      <div class="socials">
+        <a href="#" target="_blank" rel="noopener noreferrer">ig</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">x</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">in</a>
+        <a href="mailto:hello@nearfold.in">@</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== Theme toggle =====
+  const toggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+  function flipTheme() {
+    const current = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  }
+  toggle.addEventListener('click', flipTheme);
+  toggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipTheme(); }
+  });
+
+  // ===== Respect reduced motion =====
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ===== Fade-in on scroll =====
+  if (!prefersReducedMotion) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.fade-in').forEach((el) => io.observe(el));
+  } else {
+    document.querySelectorAll('.fade-in').forEach((el) => el.classList.add('visible'));
+  }
+
+  // ===== Stat counter — only on the hero stats =====
+  function animateCount(el) {
+    if (prefersReducedMotion) return;
+    const target = parseFloat(el.getAttribute('data-count-to'));
+    if (isNaN(target)) return;
+    const prefix = el.getAttribute('data-prefix') || '';
+    const suffix = el.getAttribute('data-suffix') || '';
+    const duration = 1100;
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = Math.round(target * eased);
+      el.textContent = prefix + value + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = prefix + target + suffix; // ensure exact final value
+    }
+    requestAnimationFrame(tick);
+  }
+  const statObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animateCount(entry.target);
+        statObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count-to]').forEach((el) => statObs.observe(el));
+
+  // ===== Gentle parallax on hero photo cluster (translates container only,
+  // so individual-photo float animations still compose) =====
+  if (!prefersReducedMotion) {
+    const heroPhotos = document.querySelector('.hero-photos');
+    const heroWatermark = document.querySelector('.hero-watermark');
+    if (heroPhotos || heroWatermark) {
+      let ticking = false;
+      function applyParallax() {
+        const scrollY = window.scrollY;
+        const vh = window.innerHeight;
+        // Apply only while hero is roughly in view
+        if (scrollY < vh * 1.2) {
+          if (heroPhotos) heroPhotos.style.transform = `translateY(${scrollY * -0.08}px)`;
+          if (heroWatermark) heroWatermark.style.transform = `translateY(${scrollY * 0.18}px)`;
+        }
+        ticking = false;
+      }
+      window.addEventListener('scroll', () => {
+        if (!ticking) { requestAnimationFrame(applyParallax); ticking = true; }
+      }, { passive: true });
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nearfold — Social Kit · pre-launch content</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [data-theme="dark"] {
+    --canvas: #0E0E0E; --surface: #161616; --card: #1A1A1A; --card-elevated: #222222;
+    --text-primary: #F5F0E6; --text-secondary: #C0B5A3; --text-muted: #756A5C; --text-inverse: #0E0E0E;
+    --border: rgba(245, 240, 230, 0.08); --border-strong: rgba(245, 240, 230, 0.18);
+    --screen-blend: screen;
+  }
+  [data-theme="light"] {
+    --canvas: #F5F0E6; --surface: #FAF6EC; --card: #FFFFFF; --card-elevated: #FCFAF3;
+    --text-primary: #1A1A1A; --text-secondary: #4A4338; --text-muted: #8E8275; --text-inverse: #F5F0E6;
+    --border: rgba(26, 26, 26, 0.08); --border-strong: rgba(26, 26, 26, 0.18);
+    --screen-blend: multiply;
+  }
+  :root {
+    --accent: #FF8A3D; --accent-soft: rgba(255, 138, 61, 0.16); --accent-deeper: #E8732B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--canvas); color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    transition: background 400ms cubic-bezier(0.2,0,0,1), color 400ms cubic-bezier(0.2,0,0,1);
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 6%; }
+  .container-tight { max-width: 1100px; margin: 0 auto; padding: 0 6%; }
+
+  /* TYPE */
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .display {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(2.5rem, 7vw, 6rem); line-height: 0.96; letter-spacing: -0.035em;
+  }
+  .display em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .section-title {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.025em;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .lede {
+    font-size: clamp(1rem, 1.4vw, 1.2rem); color: var(--text-secondary);
+    max-width: 64ch; line-height: 1.55;
+  }
+
+  /* NAV */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(20px);
+    background: color-mix(in srgb, var(--canvas) 78%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  nav.top .inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+  nav.top .crumb {
+    display: flex; align-items: baseline; gap: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted);
+  }
+  nav.top .crumb .active { color: var(--accent); }
+  nav.top .crumb .sep { opacity: 0.4; }
+  nav.top .tog {
+    width: 50px; height: 26px; background: var(--accent);
+    border-radius: 999px; position: relative; cursor: pointer;
+  }
+  nav.top .tog::after {
+    content: ""; width: 20px; height: 20px; background: var(--text-inverse);
+    border-radius: 50%; position: absolute; top: 3px; left: 3px;
+    transition: transform 250ms cubic-bezier(0.2,0,0,1.15);
+  }
+  [data-theme="light"] nav.top .tog::after { transform: translateX(24px); }
+
+  /* HERO */
+  header.hero { padding: 8vw 0 6vw; border-bottom: 1px solid var(--border); }
+  header.hero .display { margin-bottom: 32px; }
+
+  /* SECTIONS */
+  section.row { padding: 8vw 0; border-bottom: 1px solid var(--border); }
+  .section-header { margin-bottom: 48px; max-width: 80ch; }
+  .section-header .eyebrow { margin-bottom: 16px; }
+  .section-header .lede { margin-top: 16px; }
+
+  /* ============================================================
+     SOCIAL POSTS — square 1:1 with brand language
+     ============================================================ */
+  .posts-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  @media (max-width: 880px) { .posts-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .posts-grid { grid-template-columns: 1fr; } }
+  .post-wrap {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .post {
+    width: 100%; aspect-ratio: 1; border-radius: 4px;
+    overflow: hidden; position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+  .post-meta {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px;
+  }
+  .post-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .post-caption {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.55;
+    font-style: italic; font-family: 'Fraunces', serif;
+  }
+  .post-hash {
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-muted); letter-spacing: 0.04em; line-height: 1.5;
+  }
+
+  /* POST 1 — Brand reveal (typographic dark) */
+  .post.p1 {
+    background: #0E0E0E;
+    display: flex; flex-direction: column;
+    justify-content: space-between; padding: 8%;
+    color: #F5F0E6;
+  }
+  .post.p1 .top-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .post.p1 .sym { width: 22px; height: 22px; position: relative; }
+  .post.p1 .sym .c { position: absolute; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; border-radius: 50%; }
+  .post.p1 .sym .c1 { left: 0; background: #F5F0E6; }
+  .post.p1 .sym .c2 { right: 0; background: #FF8A3D; mix-blend-mode: screen; }
+  .post.p1 .word { font-family: 'Fraunces', serif; font-weight: 300; font-size: 16px; letter-spacing: -0.04em; }
+  .post.p1 .headline {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 8.5cqi;
+    line-height: 0.95; letter-spacing: -0.035em;
+  }
+  .post.p1 .headline em { font-style: italic; color: #FF8A3D; }
+  .post.p1 .bottom {
+    font-family: 'JetBrains Mono', monospace; font-size: 2.4cqi;
+    color: #756A5C; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+
+  /* POST 2 — Photo + overlay */
+  .post.p2 {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/cdc16df8-4aca-453f-907c-1babb79d3e13.png");
+    background-size: cover; background-position: center;
+    position: relative;
+  }
+  .post.p2::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.75) 100%);
+  }
+  .post.p2 .overlay {
+    position: absolute; inset: 0; padding: 8%;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    color: #F5F0E6; z-index: 2;
+  }
+  .post.p2 .overlay .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 2.4cqi;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #FF8A3D;
+    margin-bottom: 12px;
+  }
+  .post.p2 .overlay .quote {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 6.5cqi;
+    line-height: 1.05; letter-spacing: -0.025em; font-style: italic;
+  }
+  .post.p2 .overlay .quote em { font-style: normal; color: #FF8A3D; }
+
+  /* POST 3 — Value prop typographic */
+  .post.p3 {
+    background: #F5F0E6;
+    color: #1A1A1A;
+    padding: 8%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+  }
+  .post.p3 .num {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 22cqi;
+    line-height: 0.9; letter-spacing: -0.05em; color: #FF8A3D;
+    margin-bottom: 6%;
+  }
+  .post.p3 .label {
+    font-family: 'Fraunces', serif; font-weight: 400; font-size: 5cqi;
+    line-height: 1.15; max-width: 80%;
+  }
+  .post.p3 .label em { font-style: italic; color: #FF8A3D; }
+  .post.p3 .bottom {
+    margin-top: auto; font-family: 'JetBrains Mono', monospace; font-size: 2cqi;
+    color: #756A5C; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+
+  /* POST 4 — Seller spotlight */
+  .post.p4 {
+    background: #0E0E0E;
+    position: relative; overflow: hidden;
+    color: #F5F0E6;
+  }
+  .post.p4 .photo {
+    position: absolute; top: 0; left: 0; right: 0; height: 65%;
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/64fca767-7eca-4db8-a585-e29e62f9c853.png");
+    background-size: cover; background-position: center;
+  }
+  .post.p4 .photo::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, #0E0E0E 100%);
+  }
+  .post.p4 .info {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 6% 8% 8%;
+    z-index: 2;
+  }
+  .post.p4 .row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 3%;
+  }
+  .post.p4 .av {
+    width: 9cqi; height: 9cqi; border-radius: 50%;
+    background: linear-gradient(135deg, #FF8A3D, #E8732B);
+    display: flex; align-items: center; justify-content: center;
+    color: #0E0E0E; font-family: 'Fraunces', serif; font-size: 4.5cqi;
+  }
+  .post.p4 .name {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 5cqi;
+    font-weight: 400; color: #F5F0E6;
+  }
+  .post.p4 .sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 2cqi;
+    color: #C0B5A3; letter-spacing: 0.12em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .post.p4 .quote {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 4.5cqi;
+    line-height: 1.2; letter-spacing: -0.015em;
+    color: #F5F0E6; font-style: italic;
+  }
+  .post.p4 .quote em { color: #FF8A3D; font-style: italic; }
+
+  /* POST 5 — Local shop */
+  .post.p5 {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/89006925-e546-442f-856f-d6143fab04fc.png");
+    background-size: cover; background-position: center;
+    position: relative; overflow: hidden;
+  }
+  .post.p5::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 30%, rgba(0,0,0,0.75) 100%);
+  }
+  .post.p5 .top-tag {
+    position: absolute; top: 6%; left: 8%;
+    font-family: 'JetBrains Mono', monospace; font-size: 2.2cqi;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #F5F0E6;
+    z-index: 2;
+  }
+  .post.p5 .bottom {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 6% 8% 8%;
+    z-index: 2; color: #F5F0E6;
+  }
+  .post.p5 .h {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 7cqi;
+    line-height: 1.05; letter-spacing: -0.025em;
+  }
+  .post.p5 .h em { font-style: italic; color: #FF8A3D; }
+
+  /* POST 6 — Product showcase */
+  .post.p6 {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/cb194988-3cef-4acd-9aad-db9868e09d5d.png");
+    background-size: cover; background-position: center;
+    position: relative;
+  }
+  .post.p6 .corner {
+    position: absolute; top: 5%; left: 5%;
+    width: 4cqi; height: 4cqi; position: relative;
+  }
+  .post.p6 .corner .c {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 2.5cqi; height: 2.5cqi; border-radius: 50%;
+  }
+  .post.p6 .corner .c1 { left: 0; background: #F5F0E6; }
+  .post.p6 .corner .c2 { right: 0; background: #FF8A3D; mix-blend-mode: screen; }
+  .post.p6 .pricepill {
+    position: absolute; bottom: 6%; left: 8%;
+    background: #F5F0E6; color: #1A1A1A;
+    padding: 1.5cqi 3cqi;
+    border-radius: 999px;
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 3.2cqi;
+  }
+  .post.p6 .pricepill em { color: #FF8A3D; font-style: italic; }
+
+  /* POST 7 — Audience: Insta / WhatsApp sellers */
+  .post.p7 {
+    background: linear-gradient(135deg, #FF8A3D, #E8732B);
+    color: #0E0E0E;
+    padding: 8%;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+  .post.p7::before {
+    content: ""; position: absolute; top: -30%; right: -10%;
+    width: 60%; height: 200%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.18), transparent 60%);
+  }
+  .post.p7 .top { position: relative; z-index: 2; }
+  .post.p7 .top .sym { width: 5cqi; height: 5cqi; position: relative; display: inline-block; }
+  .post.p7 .top .sym .c { position: absolute; top: 50%; transform: translateY(-50%); width: 3cqi; height: 3cqi; border-radius: 50%; }
+  .post.p7 .top .sym .c1 { left: 0; background: #F5F0E6; }
+  .post.p7 .top .sym .c2 { right: 0; background: #0E0E0E; mix-blend-mode: multiply; }
+  .post.p7 .h {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 7.5cqi;
+    line-height: 1; letter-spacing: -0.03em; position: relative; z-index: 2;
+  }
+  .post.p7 .h em { font-style: italic; }
+  .post.p7 .sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 2cqi;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    position: relative; z-index: 2;
+  }
+
+  /* POST 8 — Locality / 5km / 90min */
+  .post.p8 {
+    background: #0E0E0E;
+    color: #F5F0E6;
+    padding: 8%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .post.p8::before {
+    content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 80%; height: 80%; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,138,61,0.18), transparent 70%);
+  }
+  .post.p8 .three { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 6%; }
+  .post.p8 .stat .v {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: 16cqi; line-height: 0.95; letter-spacing: -0.04em;
+    color: #FF8A3D;
+  }
+  .post.p8 .stat .l {
+    font-family: 'Inter', sans-serif; font-size: 3cqi;
+    color: #C0B5A3; margin-top: 2%;
+  }
+
+  /* POST 9 — Manifesto excerpt */
+  .post.p9 {
+    background: #F5F0E6; color: #1A1A1A;
+    padding: 10%;
+    display: flex; flex-direction: column; justify-content: center;
+    text-align: left;
+  }
+  .post.p9 .pull {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 7cqi;
+    line-height: 1.05; letter-spacing: -0.025em;
+  }
+  .post.p9 .pull::first-letter {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: 24cqi; line-height: 0.85; float: left;
+    margin: 0.05em 0.1em -0.1em 0;
+    color: #FF8A3D;
+  }
+  .post.p9 .attr {
+    margin-top: 8%;
+    font-family: 'JetBrains Mono', monospace; font-size: 2cqi;
+    color: #756A5C; letter-spacing: 0.18em; text-transform: uppercase;
+  }
+
+  /* ============================================================
+     STORIES — 9:16
+     ============================================================ */
+  .stories-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  @media (max-width: 1000px) { .stories-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 720px) { .stories-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .stories-grid { grid-template-columns: 1fr; max-width: 300px; margin: 0 auto; } }
+  .story-wrap { display: flex; flex-direction: column; gap: 14px; }
+  .story {
+    width: 100%; aspect-ratio: 9/16;
+    border-radius: 6px; overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .story-meta {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px;
+  }
+  .story-meta .tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .story-meta .cap {
+    font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+    font-family: 'Fraunces', serif; font-style: italic;
+  }
+
+  /* STORY 1 — Coming to your locality */
+  .story.s1 {
+    background: #0E0E0E;
+    color: #F5F0E6;
+    padding: 14% 10% 14%;
+    display: flex; flex-direction: column; justify-content: space-between;
+    text-align: left;
+  }
+  .story.s1 .logo-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .story.s1 .logo-row .sym { width: 5cqi; height: 5cqi; position: relative; }
+  .story.s1 .logo-row .sym .c { position: absolute; top: 50%; transform: translateY(-50%); width: 3cqi; height: 3cqi; border-radius: 50%; }
+  .story.s1 .logo-row .sym .c1 { left: 0; background: #F5F0E6; }
+  .story.s1 .logo-row .sym .c2 { right: 0; background: #FF8A3D; mix-blend-mode: screen; }
+  .story.s1 .logo-row .word { font-family: 'Fraunces', serif; font-weight: 300; font-size: 4.5cqi; letter-spacing: -0.04em; }
+  .story.s1 .h {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 13cqi;
+    line-height: 0.95; letter-spacing: -0.035em;
+  }
+  .story.s1 .h em { font-style: italic; color: #FF8A3D; }
+  .story.s1 .footer {
+    font-family: 'JetBrains Mono', monospace; font-size: 2.6cqi;
+    color: #756A5C; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+
+  /* STORY 2 — Drop your number */
+  .story.s2 {
+    background: linear-gradient(180deg, #FF8A3D 0%, #E8732B 100%);
+    color: #0E0E0E;
+    padding: 14% 10%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .story.s2::before {
+    content: ""; position: absolute; top: -30%; right: -30%;
+    width: 100%; height: 100%; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 70%);
+  }
+  .story.s2 .top { position: relative; z-index: 2; font-family: 'Fraunces', serif; font-style: italic; font-size: 4cqi; }
+  .story.s2 .h {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: 14cqi; line-height: 0.95; letter-spacing: -0.04em;
+    margin: 8% 0; position: relative; z-index: 2;
+  }
+  .story.s2 .input-mock {
+    background: #0E0E0E; color: #F5F0E6;
+    padding: 4cqi 6cqi; border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace; font-size: 3cqi;
+    letter-spacing: 0.04em;
+    position: relative; z-index: 2;
+    margin-bottom: 6%;
+  }
+  .story.s2 .button-mock {
+    background: #0E0E0E; color: #F5F0E6;
+    padding: 3cqi 8cqi; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 3.4cqi;
+    position: relative; z-index: 2;
+  }
+
+  /* STORY 3 — Real photo + tagline */
+  .story.s3 {
+    background-image: url("https://hyperagent.com/api/files/usergenerated/threads/cmpo760po09bx07ad46ssnc45/images/89006925-e546-442f-856f-d6143fab04fc.png");
+    background-size: cover; background-position: center;
+    position: relative; overflow: hidden;
+  }
+  .story.s3::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 35%, rgba(0,0,0,0.8) 100%);
+  }
+  .story.s3 .content {
+    position: absolute; inset: 0; padding: 14% 10%;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: #F5F0E6; z-index: 2;
+  }
+  .story.s3 .top-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .story.s3 .top-row .sym { width: 5cqi; height: 5cqi; position: relative; }
+  .story.s3 .top-row .sym .c { position: absolute; top: 50%; transform: translateY(-50%); width: 3cqi; height: 3cqi; border-radius: 50%; }
+  .story.s3 .top-row .sym .c1 { left: 0; background: #F5F0E6; }
+  .story.s3 .top-row .sym .c2 { right: 0; background: #FF8A3D; mix-blend-mode: screen; }
+  .story.s3 .top-row .word { font-family: 'Fraunces', serif; font-weight: 300; font-size: 4cqi; letter-spacing: -0.04em; }
+  .story.s3 .bottom-q {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: 9cqi; line-height: 1.05; letter-spacing: -0.025em;
+  }
+  .story.s3 .bottom-q em { font-style: normal; color: #FF8A3D; }
+  .story.s3 .attr {
+    margin-top: 4%;
+    font-family: 'JetBrains Mono', monospace; font-size: 2.4cqi;
+    color: #C0B5A3; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+
+  /* STORY 4 — Seller invite */
+  .story.s4 {
+    background: #F5F0E6;
+    color: #1A1A1A;
+    padding: 14% 10%;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .story.s4::before {
+    content: ""; position: absolute; bottom: -20%; left: -20%;
+    width: 80%; height: 80%; border-radius: 50%;
+    background: rgba(255,138,61,0.12);
+  }
+  .story.s4 .h {
+    font-family: 'Fraunces', serif; font-weight: 300; font-size: 12cqi;
+    line-height: 1.02; letter-spacing: -0.035em;
+    position: relative; z-index: 2; margin-bottom: 8%;
+  }
+  .story.s4 .h em { font-style: italic; color: #FF8A3D; }
+  .story.s4 .sub {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 4cqi;
+    color: #4A4338; line-height: 1.4;
+    position: relative; z-index: 2; margin-bottom: 8%;
+  }
+  .story.s4 .pill-mock {
+    background: #0E0E0E; color: #F5F0E6;
+    padding: 3cqi 6cqi; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 3.2cqi;
+    align-self: flex-start;
+    position: relative; z-index: 2;
+  }
+
+  /* ============================================================
+     CAPTIONS BLOCK
+     ============================================================ */
+  .captions-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  @media (max-width: 880px) { .captions-grid { grid-template-columns: 1fr; } }
+  .caption-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 24px;
+  }
+  .caption-card .tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .caption-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 18px;
+    color: var(--text-primary); margin-bottom: 12px;
+  }
+  .caption-card .copy {
+    font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+    white-space: pre-wrap;
+  }
+  .caption-card .hashtags {
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--accent); line-height: 1.6;
+  }
+
+  /* ============================================================
+     CONTENT CALENDAR
+     ============================================================ */
+  .calendar {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .calendar-week {
+    display: grid; grid-template-columns: 80px repeat(2, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .calendar-week:last-child { border-bottom: none; }
+  .calendar-week .wk {
+    padding: 20px 16px;
+    font-family: 'Fraunces', serif; font-weight: 400; font-size: 18px;
+    color: var(--accent); border-right: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: -0.01em;
+  }
+  .calendar-week .slot {
+    padding: 16px;
+    border-right: 1px solid var(--border);
+  }
+  .calendar-week .slot:last-child { border-right: none; }
+  .calendar-week .slot .day {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.18em; color: var(--text-muted); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .calendar-week .slot .what {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 14px;
+    color: var(--text-primary); margin-bottom: 4px;
+  }
+  .calendar-week .slot .where {
+    font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+  }
+
+  /* CTA */
+  section.cta {
+    padding: 10vw 0; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  section.cta::before {
+    content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 60vw; height: 60vw; max-width: 600px; max-height: 600px;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  }
+  section.cta .container { position: relative; z-index: 1; }
+  section.cta h2 {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05;
+    letter-spacing: -0.025em; margin-bottom: 24px;
+  }
+  section.cta h2 em { font-style: italic; color: var(--accent); }
+  section.cta .lede { margin: 0 auto; max-width: 56ch; }
+
+  footer {
+    padding: 32px 0; border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-muted); text-align: center;
+  }
+
+  /* "screenshot me" hint */
+  .screenshot-hint {
+    background: var(--card-elevated); border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px; border-radius: 4px; margin-bottom: 32px;
+    font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .screenshot-hint strong { color: var(--text-primary); font-weight: 500; }
+  .screenshot-hint .note {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--accent); letter-spacing: 0.16em; text-transform: uppercase;
+    display: block; margin-bottom: 6px;
+  }
+
+  /* container queries for posts to scale text by container width */
+  .post, .story { container-type: inline-size; }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="container inner">
+    <div class="crumb">
+      <span>Nearfold</span>
+      <span class="sep">·</span>
+      <span>Marketing</span>
+      <span class="sep">·</span>
+      <span class="active">Social Kit</span>
+    </div>
+    <div class="tog" id="themeToggle" role="button" tabindex="0"></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">Pre-launch · social media · brand-ready</div>
+    <h1 class="display">Share <em>Nearfold</em>,<br/>in your locality.</h1>
+    <p class="lede" style="margin-top:24px;">9 Instagram posts, 4 stories, captions for every one, and a 4-week content calendar. All on-brand, ready to screenshot, designed to drive waitlist sign-ups and seller acquisition. Toggle the theme to see how each piece looks on both canvases.</p>
+  </div>
+</header>
+
+
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">How to use this kit</div>
+      <h2 class="section-title">Screenshot. <em>Caption. Post.</em></h2>
+      <p class="lede">Each post is rendered at the exact aspect ratio social platforms expect (1:1 for Instagram feed, 9:16 for stories). Use your phone's screenshot tool (or browser dev tools at full-screen) to grab them clean. Copy the caption text below each post. Post on Insta, WhatsApp Status, LinkedIn, X — wherever your sellers and buyers already are.</p>
+    </div>
+    <div class="screenshot-hint">
+      <span class="note">Tip · for the cleanest screenshots</span>
+      <strong>Click the theme toggle above</strong> if you want a specific canvas (dark or light). Some posts look stronger on one. Hit fullscreen in your browser, then screenshot the post you want — it'll save at full quality.
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ INSTAGRAM POSTS (1:1) -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Instagram feed posts · 1:1</div>
+      <h2 class="section-title">Nine posts. <em>Ready to share.</em></h2>
+      <p class="lede">Use as Instagram feed posts, LinkedIn cards, WhatsApp shares. Each one carries a different angle: brand reveal, manifesto, value props, seller spotlights, audience signal.</p>
+    </div>
+
+    <div class="posts-grid">
+
+      <!-- POST 1 -->
+      <div class="post-wrap">
+        <div class="post p1">
+          <div class="top-row">
+            <div class="sym"><div class="c c1"></div><div class="c c2"></div></div>
+            <div class="word">nearfold</div>
+          </div>
+          <div class="headline">Real shops,<br/>real makers,<br/><em>real close.</em></div>
+          <div class="bottom">Coming to your locality · 2026</div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">01 · Brand reveal</div>
+          <div class="post-caption">"The hyperlocal marketplace for the shops, makers, and sellers in your locality. Coming this year."</div>
+          <div class="post-hash">#nearfold #hyperlocal #yourlocality #madeinindia #shoplocal</div>
+        </div>
+      </div>
+
+      <!-- POST 2 -->
+      <div class="post-wrap">
+        <div class="post p2">
+          <div class="overlay">
+            <div class="label">Manifesto · 01</div>
+            <div class="quote">We're not trying to replace the shops next door. We're trying to <em>put them in your pocket.</em></div>
+          </div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">02 · Manifesto excerpt</div>
+          <div class="post-caption">"For the bakery on your street that doesn't have an app. For the pickle aunty whose orders happen on WhatsApp. For the corner shop with the paper notebook. Nearfold is for them — exactly as they are."</div>
+          <div class="post-hash">#nearfold #homemade #localshops #pickleaunty #craftmaker</div>
+        </div>
+      </div>
+
+      <!-- POST 3 -->
+      <div class="post-wrap">
+        <div class="post p3">
+          <div class="num">100%</div>
+          <div class="label">your shop.<br/><em>Your rules.</em></div>
+          <div class="bottom">Your hours · your prices · for sellers</div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">03 · Seller independence</div>
+          <div class="post-caption">"Set your own hours. Set your own prices. Set your own delivery radius. We're a counter, not a manager."</div>
+          <div class="post-hash">#nearfold #sellertools #independentbusiness #indianentrepreneur #smb</div>
+        </div>
+      </div>
+
+      <!-- POST 4 -->
+      <div class="post-wrap">
+        <div class="post p4">
+          <div class="photo"></div>
+          <div class="info">
+            <div class="row">
+              <div class="av">M</div>
+              <div>
+                <div class="name">Meera</div>
+                <div class="sub">CRAFT MAKER · ON NEARFOLD</div>
+              </div>
+            </div>
+            <div class="quote">"I was juggling Instagram DMs and screenshots of UPI payments. Now my shop opens at 9 AM and <em>closes at 6.</em>"</div>
+          </div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">04 · Seller spotlight</div>
+          <div class="post-caption">"Meera makes hand-painted terracotta pots from her studio. Before Nearfold, she ran her shop in Instagram DMs. Now she sets opening hours, takes orders in-app, and delivers within the city the same day."</div>
+          <div class="post-hash">#nearfold #craftmakers #sellerstory #indiancraft #shoplocal</div>
+        </div>
+      </div>
+
+      <!-- POST 5 -->
+      <div class="post-wrap">
+        <div class="post p5">
+          <div class="top-tag">Local shop · on Nearfold</div>
+          <div class="bottom">
+            <div class="h">The kirana <em>on your street</em>, in your pocket.</div>
+          </div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">05 · Local shop reveal</div>
+          <div class="post-caption">"Karan's family has run the corner store since '79. He still hand-writes invoices. With Nearfold, his shop is suddenly in 10,000 phones — no website, no fancy tech, no learning curve."</div>
+          <div class="post-hash">#nearfold #kirana #localshops #neighborhoodstore #shoplocal</div>
+        </div>
+      </div>
+
+      <!-- POST 6 -->
+      <div class="post-wrap">
+        <div class="post p6">
+          <div class="corner"><div class="c c1"></div><div class="c c2"></div></div>
+          <div class="pricepill">Anita's Bakery · <em>₹360 · box of 12</em></div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">06 · Product showcase</div>
+          <div class="post-caption">"Hand-rolled fresh every morning with hand-roasted besan, pure desi ghee, and a hint of cardamom. Anita's motichoor laddoo — 2 km away in your locality."</div>
+          <div class="post-hash">#nearfold #motichoor #homebaker #anitasbakery #mithai</div>
+        </div>
+      </div>
+
+      <!-- POST 7 -->
+      <div class="post-wrap">
+        <div class="post p7">
+          <div class="top">
+            <div class="sym"><div class="c c1"></div><div class="c c2"></div></div>
+          </div>
+          <div class="h">Selling on <em>Insta or WhatsApp?</em><br/>Move it here.</div>
+          <div class="sub">For sellers · launching 2026</div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">07 · Audience call · for sellers</div>
+          <div class="post-caption">"If your orders happen in DMs, payments in screenshots, and inventory in your head — Nearfold is built for you. Set up a shop in 4 minutes. Get paid weekly via UPI."</div>
+          <div class="post-hash">#nearfold #instagramshop #whatsappbusiness #sellerlife #smb</div>
+        </div>
+      </div>
+
+      <!-- POST 8 -->
+      <div class="post-wrap">
+        <div class="post p8">
+          <div class="three">
+            <div class="stat"><div class="v">5km</div><div class="l">delivery radius</div></div>
+            <div class="stat"><div class="v">90min</div><div class="l">to your door</div></div>
+            <div class="stat"><div class="v">1</div><div class="l">your locality</div></div>
+          </div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">08 · Three numbers</div>
+          <div class="post-caption">"Five kilometres. Ninety minutes. One locality. Nearfold's whole proposition in three numbers."</div>
+          <div class="post-hash">#nearfold #hyperlocal #yourlocality #shoplocal</div>
+        </div>
+      </div>
+
+      <!-- POST 9 -->
+      <div class="post-wrap">
+        <div class="post p9">
+          <div class="pull">We believe in the bakery on your street that doesn't have an app.</div>
+          <div class="attr">— Nearfold manifesto</div>
+        </div>
+        <div class="post-meta">
+          <div class="post-tag">09 · Drop-cap manifesto</div>
+          <div class="post-caption">"A small manifesto. Nearfold is for the shops, makers, and sellers your neighbourhood already knows. We're just putting them in your pocket."</div>
+          <div class="post-hash">#nearfold #manifesto #shoplocal #hyperlocal #yourlocality</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ STORIES (9:16) -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Instagram stories · WhatsApp status · 9:16</div>
+      <h2 class="section-title">Four stories. <em>Tap, share, gone.</em></h2>
+      <p class="lede">Designed for Instagram stories and WhatsApp status. Each 9:16 — drops the user into one clear moment. Pair with the linked caption text below.</p>
+    </div>
+
+    <div class="stories-grid">
+
+      <!-- STORY 1 -->
+      <div class="story-wrap">
+        <div class="story s1">
+          <div class="logo-row">
+            <div class="sym"><div class="c c1"></div><div class="c c2"></div></div>
+            <div class="word">nearfold</div>
+          </div>
+          <div class="h">Coming to your<br/><em>locality.</em></div>
+          <div class="footer">Drop your number · link in bio</div>
+        </div>
+        <div class="story-meta">
+          <div class="tag">01 · Teaser</div>
+          <div class="cap">"Coming to your locality. Drop your number — link in bio."</div>
+        </div>
+      </div>
+
+      <!-- STORY 2 -->
+      <div class="story-wrap">
+        <div class="story s2">
+          <div class="top">— be first when we launch —</div>
+          <div class="h">Get notified.</div>
+          <div class="input-mock">+91 — your number</div>
+          <div class="button-mock">Notify me →</div>
+        </div>
+        <div class="story-meta">
+          <div class="tag">02 · Waitlist</div>
+          <div class="cap">"One SMS, the day we open in your locality. We don't have time for newsletters."</div>
+        </div>
+      </div>
+
+      <!-- STORY 3 -->
+      <div class="story-wrap">
+        <div class="story s3">
+          <div class="content">
+            <div class="top-row">
+              <div class="sym"><div class="c c1"></div><div class="c c2"></div></div>
+              <div class="word">nearfold</div>
+            </div>
+            <div>
+              <div class="bottom-q">"It's not a network. It's <em>my neighbour.</em>"</div>
+              <div class="attr">— from a Nearfold seller</div>
+            </div>
+          </div>
+        </div>
+        <div class="story-meta">
+          <div class="tag">03 · Seller voice</div>
+          <div class="cap">"What real sellers say about selling on Nearfold. Locality, not algorithm."</div>
+        </div>
+      </div>
+
+      <!-- STORY 4 -->
+      <div class="story-wrap">
+        <div class="story s4">
+          <div class="h">Sell what<br/>you make,<br/><em>at home.</em></div>
+          <div class="sub">Bake. Cook. Craft. Roast. Stitch. Paint. Pack pickles. Tell us you sell — we'll let you in early when we open for sellers.</div>
+          <div class="pill-mock">For sellers · link in bio</div>
+        </div>
+        <div class="story-meta">
+          <div class="tag">04 · Seller acquisition</div>
+          <div class="cap">"For anyone making something from home, on Instagram, on WhatsApp. Bring your shop to Nearfold."</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ CAPTIONS LIBRARY -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">Caption library</div>
+      <h2 class="section-title">Copy. <em>Paste. Customize.</em></h2>
+      <p class="lede">Long-form caption variants for the major posts above. Mix and match for variety across the week.</p>
+    </div>
+
+    <div class="captions-grid">
+
+      <div class="caption-card">
+        <div class="tag">Caption variant A · brand reveal</div>
+        <h3>What is Nearfold?</h3>
+        <div class="copy">A hyperlocal marketplace for the shops, makers, and sellers in your locality. The home baker two lanes over. The kirana on your street. The craft maker selling on Instagram. The pickle aunty whose orders happen on WhatsApp.
+
+We're putting all of them in your pocket — exactly as they are.
+
+5 km radius. 90 minutes. Your locality. Coming to your city this year.
+
+Drop your number — link in bio.</div>
+        <div class="hashtags">#nearfold #hyperlocal #yourlocality #shoplocal #homemade #madeinindia #smb #indianmakers</div>
+      </div>
+
+      <div class="caption-card">
+        <div class="tag">Caption variant B · seller-focused</div>
+        <h3>For sellers · the pitch</h3>
+        <div class="copy">If you're already selling on Instagram, WhatsApp, or by word-of-mouth — we built Nearfold for you.
+
+→ Set up a shop in 4 minutes
+→ Set your own hours and prices
+→ 5 km delivery radius (you set it)
+→ Fair pricing — never a percentage that grows with your sale
+→ Weekly UPI payouts every Monday
+
+We're not asking you to change how you work. We're giving you a better counter to work from.
+
+Coming this year. Link in bio for early access.</div>
+        <div class="hashtags">#nearfold #smb #indianentrepreneur #instagramshop #whatsappbusiness #homebaker #craftmaker</div>
+      </div>
+
+      <div class="caption-card">
+        <div class="tag">Caption variant C · buyer-focused</div>
+        <h3>For buyers · the pitch</h3>
+        <div class="copy">Tired of national e-commerce treating your city like a delivery problem?
+
+Nearfold is different. We only show shops within 5 km of you. The home baker two lanes over. The corner shop. The craft maker who has 200 followers. The pickle aunty.
+
+Real people. Real shops. Your locality.
+
+Coming this year. Be first when we launch in your city.</div>
+        <div class="hashtags">#nearfold #shoplocal #hyperlocal #yourlocality #homemade #localshops</div>
+      </div>
+
+      <div class="caption-card">
+        <div class="tag">Caption variant D · manifesto</div>
+        <h3>What we believe</h3>
+        <div class="copy">We don't believe "hyperlocal" is a marketing word.
+
+We believe in the bakery on your street that doesn't have an app. The pickle aunty whose orders happen on WhatsApp. The craft maker selling DM-to-DM. The corner sweet shop that still uses a paper notebook.
+
+Nearfold is for them. And for you — the person who'd rather buy from a real shop run by a real person than from a faceless catalog.
+
+We're not trying to replace the shops next door. We're putting them in your pocket — exactly as they are.</div>
+        <div class="hashtags">#nearfold #manifesto #shoplocal #realshops #realmakers</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ CONTENT CALENDAR -->
+<section class="row">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow">4-week pre-launch calendar</div>
+      <h2 class="section-title">When to post <em>what.</em></h2>
+      <p class="lede">A four-week pre-launch rhythm — two posts a week (Tuesday + Friday). Mix brand reveal, seller stories, audience signals, and waitlist pushes. Stories run daily to drive sign-ups.</p>
+    </div>
+
+    <div class="calendar">
+      <div class="calendar-week">
+        <div class="wk">Week 1</div>
+        <div class="slot">
+          <div class="day">Tue · feed</div>
+          <div class="what">Post 01 — Brand reveal</div>
+          <div class="where">Instagram · LinkedIn · X · WhatsApp Status</div>
+        </div>
+        <div class="slot">
+          <div class="day">Fri · feed</div>
+          <div class="what">Post 09 — Drop-cap manifesto</div>
+          <div class="where">Instagram · LinkedIn long-form</div>
+        </div>
+      </div>
+      <div class="calendar-week">
+        <div class="wk">Week 2</div>
+        <div class="slot">
+          <div class="day">Tue · feed</div>
+          <div class="what">Post 05 — Local shop reveal</div>
+          <div class="where">Instagram · WhatsApp Status</div>
+        </div>
+        <div class="slot">
+          <div class="day">Fri · feed</div>
+          <div class="what">Post 04 — Seller spotlight (Meera)</div>
+          <div class="where">Instagram · LinkedIn</div>
+        </div>
+      </div>
+      <div class="calendar-week">
+        <div class="wk">Week 3</div>
+        <div class="slot">
+          <div class="day">Tue · feed</div>
+          <div class="what">Post 07 — Insta/WhatsApp sellers</div>
+          <div class="where">Instagram · LinkedIn (seller acquisition focus)</div>
+        </div>
+        <div class="slot">
+          <div class="day">Fri · feed</div>
+          <div class="what">Post 03 — Seller independence value prop</div>
+          <div class="where">Instagram · LinkedIn · X</div>
+        </div>
+      </div>
+      <div class="calendar-week">
+        <div class="wk">Week 4</div>
+        <div class="slot">
+          <div class="day">Tue · feed</div>
+          <div class="what">Post 06 — Product showcase (Anita)</div>
+          <div class="where">Instagram · WhatsApp Status (story version)</div>
+        </div>
+        <div class="slot">
+          <div class="day">Fri · feed</div>
+          <div class="what">Post 08 — Three numbers (5km · 90min · 1 locality)</div>
+          <div class="where">Instagram · X (great for retweets)</div>
+        </div>
+      </div>
+      <div class="calendar-week">
+        <div class="wk">Daily</div>
+        <div class="slot">
+          <div class="day">Stories</div>
+          <div class="what">Rotate stories 01–04 across all 4 weeks</div>
+          <div class="where">IG Story · WhatsApp Status · always link to waitlist</div>
+        </div>
+        <div class="slot">
+          <div class="day">DM-led</div>
+          <div class="what">Reply to every comment / DM personally</div>
+          <div class="where">Especially from sellers — give them onboarding info one-on-one</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container">
+    <h2>Share <em>Nearfold</em>, in your locality.</h2>
+    <p class="lede">Screenshot, post, repeat. Every share brings one more shop, one more buyer, one more locality on board.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">Nearfold · Social Kit · Pre-launch</div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+  function flipTheme() {
+    const current = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  }
+  toggle.addEventListener('click', flipTheme);
+  toggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipTheme(); }
+  });
+</script>
+
+</body>
+</html>
