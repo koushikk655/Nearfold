@@ -1,95 +1,30 @@
-// Home — placeholder until Week 2 lands Discover. In dev builds we also
-// surface a quiet entry into the design-system gallery at `/dev`.
+// Splash route — first thing the user sees after fonts + auth hydrate.
+// Branches on auth status: logged-in → /(app) home; otherwise → /auth/phone.
+//
+// Kept deliberately tiny — anything visible in this file only flashes for
+// a frame before navigation kicks in.
 
-import { Link } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect } from 'react';
+import { View } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { useTheme } from '../src/theme/useTheme';
+import { useAuthStore } from '../src/store/authStore';
 
-export default function Home() {
+export default function SplashRoute() {
   const theme = useTheme();
+  const router = useRouter();
+  const status = useAuthStore((s) => s.status);
 
-  return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.colors.bg }}
-      edges={['top', 'bottom']}
-    >
-      <View style={styles.content}>
-        <Text
-          style={[
-            theme.type.caption,
-            { color: theme.colors.textTertiary, marginBottom: theme.spacing.xs },
-          ]}
-        >
-          NEARFOLD
-        </Text>
-        <Text style={[theme.type.display, { color: theme.colors.text }]}>
-          Five blocks away.
-        </Text>
-        <Text
-          style={[
-            theme.type.bodyLg,
-            {
-              color: theme.colors.textSecondary,
-              marginTop: theme.spacing.md,
-              maxWidth: 360,
-            },
-          ]}
-        >
-          A hyperlocal marketplace for the people cooking, baking, and stitching
-          on your street. Week 2 wires up Discover.
-        </Text>
-      </View>
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace('/home');
+    } else if (status === 'anonymous') {
+      router.replace('/auth/phone');
+    }
+    // 'idle' / 'hydrating' should not happen here — root layout holds
+    // splash until hydration finishes — but if they slip through, we wait.
+  }, [status, router]);
 
-      {__DEV__ ? (
-        <View
-          style={[
-            styles.devBanner,
-            {
-              backgroundColor: theme.colors.surfaceMuted,
-              borderTopColor: theme.colors.border,
-            },
-          ]}
-        >
-          <View style={{ flex: 1 }}>
-            <Text style={[theme.type.labelSm, { color: theme.colors.textTertiary }]}>
-              DEV BUILD
-            </Text>
-            <Text style={[theme.type.body, { color: theme.colors.text }]}>
-              Design system gallery
-            </Text>
-          </View>
-          <Link
-            href="/dev"
-            style={[
-              theme.type.button,
-              {
-                color: theme.colors.accent,
-                paddingVertical: theme.spacing.xs,
-                paddingHorizontal: theme.spacing.md,
-              },
-            ]}
-          >
-            Open →
-          </Link>
-        </View>
-      ) : null}
-    </SafeAreaView>
-  );
+  return <View style={{ flex: 1, backgroundColor: theme.colors.bg }} />;
 }
-
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: 'center',
-  },
-  devBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-});

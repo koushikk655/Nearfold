@@ -1,6 +1,6 @@
 // Root layout — wraps the entire app in ThemeProvider + QueryClient +
-// SafeAreaProvider + GestureHandlerRootView. The SplashScreen is held until
-// fonts finish loading so type renders correctly on first paint.
+// SafeAreaProvider + GestureHandlerRootView, then holds the splash screen
+// until both font loading AND auth hydration finish.
 
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 import { useFonts } from '../src/hooks/useFonts';
+import { useAuthHydration } from '../src/hooks/useAuthHydration';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -25,15 +26,16 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
-  const { loaded, error } = useFonts();
+  const { loaded: fontsLoaded, error: fontsError } = useFonts();
+  const authHydrated = useAuthHydration();
 
   useEffect(() => {
-    if (loaded || error) {
+    if ((fontsLoaded || fontsError) && authHydrated) {
       void SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+  }, [fontsLoaded, fontsError, authHydrated]);
 
-  if (!loaded && !error) return null;
+  if (!(fontsLoaded || fontsError) || !authHydrated) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

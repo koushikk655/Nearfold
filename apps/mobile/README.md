@@ -10,7 +10,9 @@ This is `apps/mobile` inside the Nearfold pnpm workspace. The backend lives in `
 - **React Native 0.76** · **Reanimated 3** · **Moti**
 - **expo-router** for file-based routing
 - **TanStack Query** for server state · **Zustand** for client state
-- **expo-image** · **expo-haptics** · **@gorhom/bottom-sheet**
+- **expo-image** · **expo-haptics** · **expo-secure-store** · **@gorhom/bottom-sheet**
+- **@react-native-firebase/auth** for Phone OTP
+- **react-hook-form + zod** for forms · shared schemas via `@nearfold/shared`
 
 ## Run it
 
@@ -18,13 +20,20 @@ This is `apps/mobile` inside the Nearfold pnpm workspace. The backend lives in `
 # from repo root
 pnpm install
 
-# pick a platform
-pnpm --filter mobile ios       # iOS simulator
-pnpm --filter mobile android   # Android emulator / device
-pnpm --filter mobile start     # dev server, pick platform via Expo CLI menu
+# build the shared zod/types package once after any schema change
+pnpm --filter @nearfold/shared build
+
+# Phone Auth needs native modules → must use a dev build, NOT Expo Go.
+pnpm --filter mobile prebuild   # generates ios/ + android/
+pnpm --filter mobile ios        # iOS device / simulator
+pnpm --filter mobile android    # Android device / emulator
 ```
 
 > **Fonts required.** Drop the Fraunces + Inter + JetBrains Mono `.ttf` files into `assets/fonts/` before the first run. See [`assets/fonts/README.md`](./assets/fonts/README.md) for one-command install.
+
+> **Firebase config required.** Place `GoogleService-Info.plist` (iOS) and `google-services.json` (Android) in `apps/mobile/`. Both are referenced from `app.json`, both are git-ignored. See [Firebase setup](#firebase-setup) below.
+
+> **Backend reachable from your device.** Set `expo.extra.apiBaseUrl` in `app.json` to your LAN IP + port (`http://10.0.0.5:3000/api/v1`), not `localhost`. The iOS simulator can use `localhost`, Android emulator uses `10.0.2.2`, physical devices need your LAN IP.
 
 ## Design system pattern
 
@@ -41,23 +50,60 @@ In code, this surfaces as:
 
 > **No hardcoded colors, spacing, or radii in components.** Read every visual value from `useTheme()`. This is what lets us ship light + dark from a single component, and what lets the design team adjust the palette without code changes.
 
-When you add a new component:
+## Routes & auth
 
-1. Start with `const theme = useTheme();`
-2. Pull colors from `theme.colors.*`, spacing from `theme.spacing.*`, type from `theme.type.*`, radii from `theme.radii.*`, motion from `src/motion`.
-3. Use the `variant + size` prop pattern — match the existing 5 primitives.
-4. Add an entry to `src/components/index.ts`.
+```
+app/
+├─ _layout.tsx         # root providers, splash held until fonts+auth hydrate
+├─ index.tsx           # splash → branches on auth status
+├─ auth/               # PUBLIC: phone entry + OTP verify
+│  ├─ _layout.tsx      # bounces authenticated users to /(app)
+│  ├─ phone.tsx
+│  └─ otp.tsx
+├─ (app)/              # PROTECTED: redirects to /auth/phone without JWT
+│  ├─ _layout.tsx
+│  └─ home.tsx         # → /home — placeholder (becomes Discover in Week 3)
+└─ dev/                # __DEV__-only gallery, stripped from prod bundle
+   ├─ _layout.tsx
+   └─ index.tsx
+```
 
-## Dev gallery (`/dev`)
+**State machine** (`src/store/authStore.ts`):
+- `idle` → hasn't touched SecureStore yet
+- `hydrating` → reading SecureStore
+- `authenticated` → token present
+- `anonymous` → token absent
 
-A Storybook-style design-system browser lives at `/dev`. In dev builds the home screen shows a banner that opens it; in production builds the route is unreachable AND the gallery code is stripped from the bundle (see below).
+The root layout holds the splash screen until hydration finishes, so the user never sees `/auth/phone` flash for a returning session.
 
-To add a new story:
+## Firebase setup
 
-1. Create `src/dev/stories/MyThingStory.tsx` exporting `MyThingStory`.
-2. Register it in `src/dev/stories/index.tsx` under one of the `storyGroups`.
+Phone Auth uses `@react-native-firebase/auth`, which requires native modules. You cannot run this flow in Expo Go.
 
-The sidebar updates automatically.
+### One-time
+
+1. **Firebase project** — create one at https://console.firebase.google.com/.
+2. **Enable Phone provider** — Authentication → Sign-in method → Phone → Enable.
+3. **Test phone numbers** (recommended) — same screen → "Phone numbers for testing" → add e.g. `+91 9000000001` with code `123456`. No real SMS, full flow works.
+4. **iOS APNs** — Project settings → Cloud Messaging → upload APNs auth key (needed for silent push verification on iOS).
+5. **Android SHA-1** — Project settings → Your apps → add Android app, upload SHA-1 fingerprint (`./gradlew signingReport` after prebuild).
+6. **Download config files**:
+   - iOS: `GoogleService-Info.plist` → `apps/mobile/GoogleService-Info.plist`
+   - Android: `google-services.json` → `apps/mobile/google-services.json`
+7. **Backend env** — make sure `apps/api/.env` has `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` from the same project's service account.
+
+### Run
+
+```bash
+pnpm --filter mobile prebuild   # writes ios/ + android/ with Firebase wired in
+pnpm --filter mobile ios        # or android
+```
+
+### Local dev without Firebase
+
+If you haven't set Firebase up yet, you can still build the rest of the app on top of the auth UI. Either:
+- Use a Firebase test phone number (above), or
+- Stub `src/firebase/phoneAuth.ts` locally to return a fake confirmation — but **don't commit**, and `verify:prod-strip` won't catch it.
 
 ## Production stripping
 
@@ -66,46 +112,36 @@ The dev gallery is more than runtime-gated — its **source files are excluded f
 - **`babel-plugins/replace-dev-imports.js`** — when `BABEL_ENV=production`, rewrites any import that resolves into `src/dev/` so it points at `src/dev-stub.tsx` instead.
 - **`src/dev-stub.tsx`** — a Proxy-based module that returns a no-op `<Redirect href="/" />` component for any named or default access.
 
-The only path into the dev tree from "real" app code is `app/dev/index.tsx → src/dev/DevGallery`. The plugin rewrites that single edge to point at the stub, and Metro therefore never traverses into `src/dev/`. None of the story modules, the gallery shell, or the sidebar end up in the production JS bundle.
-
-### Verify
-
 ```bash
 pnpm --filter mobile verify:prod-strip
 ```
 
-This runs `expo export --platform ios` in production mode, then greps the resulting bundle for unique strings from each dev module (`storyGroups`, `ColorsStory`, `DevGallery`, etc.). The script fails loudly if any of them appear in the bundle.
+Runs `expo export --platform ios` in production mode, then greps the bundle for known dev strings (`storyGroups`, `ColorsStory`, `DevGallery`, etc.). Fails if any appear; confirms `DevDisabled` (the stub) IS present.
 
-It also confirms `dev-stub.tsx`'s `DevDisabled` component IS present — that proves the plugin actually fired during the build rather than silently no-op'ing.
+## Week-by-week progress
 
-### Why a plugin + stub instead of `if (__DEV__)` blocks?
-
-Metro builds the dependency graph from `import`/`require` calls **before** dead-code elimination runs, so even guarded imports still end up in the bundle:
-
-```ts
-if (__DEV__) {
-  const { DevGallery } = require('../../src/dev/DevGallery'); // still bundled
-}
-```
-
-Rewriting the import path at the babel layer is the only clean way to keep the dev tree out of production.
+- **Week 1** — Foundation (scaffold + theme + motion + 5 components + dev gallery + prod-strip)
+- **Week 2** — Auth flow: Splash, Phone Entry, OTP Verify, Firebase + backend JWT, expo-secure-store, AuthContext, protected (app) group
+- **Week 3** — Home feed + Shop page (Phase 06 designs, blur-up, stagger)
+- **Week 4** — Product detail + Cart
+- **Week 5** — Payments (Razorpay + COD) + order tracking
+- **Week 6** — Push + Settings
+- **Week 7** — EAS Build alpha + perf audit
+- **Week 8** — TestFlight + Play internal + 10–20 seller pilot
 
 ## Project structure
 
 ```
 apps/mobile/
-├─ app/                     # expo-router routes
-│  ├─ _layout.tsx           # root layout, providers, splash gate
-│  ├─ index.tsx             # home (minimal placeholder, __DEV__-gated /dev link)
-│  └─ dev/                  # design-system gallery (stripped in prod)
-│     ├─ _layout.tsx        # __DEV__ redirect gate
-│     └─ index.tsx          # mounts DevGallery
+├─ app/                     # expo-router routes (see Routes & auth above)
 ├─ src/
 │  ├─ components/           # 5 primitives + barrel
 │  ├─ theme/                # tokens + provider + useTheme
 │  ├─ motion/               # duration / easing / spring tokens
-│  ├─ store/                # Zustand stores (themeStore so far)
-│  ├─ hooks/                # useFonts and future shared hooks
+│  ├─ store/                # Zustand stores (theme, auth, authFlow)
+│  ├─ api/                  # fetch client + per-module API surfaces
+│  ├─ firebase/             # Firebase wrappers (phone OTP for now)
+│  ├─ hooks/                # useFonts, useAuthHydration
 │  ├─ dev/                  # gallery shell, sidebar, stories (PROD-STRIPPED)
 │  └─ dev-stub.tsx          # production stub for src/dev/*
 ├─ assets/
@@ -114,7 +150,7 @@ apps/mobile/
 │  └─ replace-dev-imports.js  # rewrites src/dev/* imports → stub in prod
 ├─ scripts/
 │  └─ verify-prod-strip.sh    # bundle-level verification
-├─ app.json                 # Expo config
+├─ app.json                 # Expo config + Firebase plugins + apiBaseUrl
 ├─ babel.config.js          # reanimated + conditional dev-strip plugin
 ├─ metro.config.js          # pnpm-workspace aware
 └─ tsconfig.json            # extends expo/tsconfig.base
