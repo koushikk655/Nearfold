@@ -36,3 +36,6 @@ export { SearchBar } from './feature/SearchBar';
 export type { SearchBarProps } from './feature/SearchBar';
 export { CategoryChips, CATEGORIES } from './feature/CategoryChips';
 export type { CategoryChipsProps } from './feature/CategoryChips';
+export { QuantityStepper } from './feature/QuantityStepper';
+export type { QuantityStepperProps } from './feature/QuantityStepper';
+export { CartBar } from './feature/CartBar';
