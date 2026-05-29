@@ -18,9 +18,10 @@ import * as Notifications from 'expo-notifications';
 // Foreground presentation: show a banner + play sound even when the app is
 // open. Tune per-channel later if it feels noisy.
 Notifications.setNotificationHandler({
+  // SDK 52's NotificationBehavior uses shouldShowAlert (the banner/list
+  // split is SDK 53+). Keep this aligned with the installed expo-notifications.
   handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
+    shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
   }),

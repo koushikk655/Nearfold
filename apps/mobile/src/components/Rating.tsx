@@ -17,7 +17,7 @@ export interface RatingProps {
 
 export function Rating({ rating, totalOrders, size = 'md', style }: RatingProps) {
   const theme = useTheme();
-  const label = formatRating(rating, totalOrders);
+  const label = formatRating(rating);
   const isNew = label === 'New';
   const fontSize = size === 'sm' ? 12 : 14;
 

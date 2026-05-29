@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -77,8 +77,10 @@ export default function OtpVerifyScreen() {
     setSubmitError(null);
     try {
       const firebaseIdToken = await confirmPhoneOtp(confirmation, code);
-      const { token, user } = await authApi.verifyOtp({ phone, firebaseIdToken });
-      setSession({ token, user });
+      // Pass the whole response so accessToken / refreshToken / expiries flow
+      // through once the backend ships the refresh-token contract.
+      const session = await authApi.verifyOtp({ phone, firebaseIdToken });
+      setSession(session);
       resetFlow();
       // Layout-level Redirect will take it from here, but be explicit:
       router.replace('/home');
@@ -239,7 +241,3 @@ export default function OtpVerifyScreen() {
     </SafeAreaView>
   );
 }
-
-// (Keep this for future styling experiments.)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _styles = StyleSheet.create({});

@@ -36,7 +36,9 @@ export interface ServerSession {
   /** ISO 8601 timestamps when present. */
   accessTokenExpiresAt?: string;
   refreshTokenExpiresAt?: string;
-  user: AuthUser;
+  /** Present on verify-otp; omitted on refresh (tokens-only). When omitted,
+   *  setSession keeps the existing user. */
+  user?: AuthUser;
 }
 
 interface AuthState {
@@ -88,14 +90,18 @@ export const useAuthStore = create<AuthState>()(
           // without a token.
           throw new Error('setSession called without an access token');
         }
-        set({
+        set((state) => ({
           token: access,
-          refreshToken: session.refreshToken ?? null,
-          user: session.user,
+          // Refresh responses omit the refresh token rotation? They include
+          // it; verify includes it. Keep prior value only if absent.
+          refreshToken: session.refreshToken ?? state.refreshToken,
+          // Refresh is tokens-only — preserve the signed-in user.
+          user: session.user ?? state.user,
           accessTokenExpiresAt: parseIsoMs(session.accessTokenExpiresAt),
-          refreshTokenExpiresAt: parseIsoMs(session.refreshTokenExpiresAt),
+          refreshTokenExpiresAt:
+            parseIsoMs(session.refreshTokenExpiresAt) ?? state.refreshTokenExpiresAt,
           status: 'authenticated',
-        });
+        }));
       },
 
       clear: () =>

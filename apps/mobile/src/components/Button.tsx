@@ -15,6 +15,7 @@ import {
   View,
   type PressableProps,
   type StyleProp,
+  type TextStyle,
   type ViewStyle,
 } from 'react-native';
 import { MotiView } from 'moti';
@@ -70,7 +71,7 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
   );
 
   const { container, text } = useMemo(() => {
-    const sizeMap: Record<ButtonSize, { paddingV: number; paddingH: number; minHeight: number; typeStyle: typeof theme.type.button }> = {
+    const sizeMap: Record<ButtonSize, { paddingV: number; paddingH: number; minHeight: number; typeStyle: TextStyle }> = {
       sm: { paddingV: theme.spacing.xs, paddingH: theme.spacing.md, minHeight: 36, typeStyle: theme.type.buttonSm },
       md: { paddingV: theme.spacing.sm, paddingH: theme.spacing.lg, minHeight: 48, typeStyle: theme.type.button },
       lg: { paddingV: theme.spacing.md, paddingH: theme.spacing.xl, minHeight: 56, typeStyle: theme.type.buttonLg },

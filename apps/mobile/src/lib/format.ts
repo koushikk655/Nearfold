@@ -34,7 +34,7 @@ export function formatDistance(meters: number): string {
 }
 
 /** "4.8" — one decimal, or "New" when a seller has no rating yet. */
-export function formatRating(rating: number, totalOrders?: number): string {
+export function formatRating(rating: number): string {
   if (!rating || rating <= 0) return 'New';
   return rating.toFixed(1);
 }

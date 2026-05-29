@@ -1,7 +1,7 @@
 // Button story — every variant × size, plus loading and disabled states.
 
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 
 import { Button } from '../../components';
 import { useTheme } from '../../theme/useTheme';

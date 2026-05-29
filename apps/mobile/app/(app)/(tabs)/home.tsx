@@ -10,7 +10,7 @@
 // (FadeInDown) per Phase 03 motion + Phase 04 perceived-performance.
 
 import { useMemo, useState } from 'react';
-import { RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, Text, View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -108,7 +108,7 @@ export default function DiscoverScreen() {
         <Text style={[theme.type.h2, { color: theme.colors.text, marginTop: 2 }]}>
           What’s near you.
         </Text>
-        <View style={{ margintop: 0, marginTop: theme.spacing.md }}>
+        <View style={{ marginTop: theme.spacing.md }}>
           <SearchBar onDebouncedChange={setSearch} />
         </View>
       </View>
@@ -172,6 +172,3 @@ export default function DiscoverScreen() {
     </SafeAreaView>
   );
 }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _styles = StyleSheet.create({});

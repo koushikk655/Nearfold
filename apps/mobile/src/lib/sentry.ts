@@ -71,7 +71,7 @@ export function captureException(error: unknown) {
 }
 
 export function addBreadcrumb(crumb: Breadcrumb) {
-  sentry?.addBreadcrumb(crumb);
+  sentry?.addBreadcrumb(crumb as unknown as Record<string, unknown>);
 }
 
 export function setSentryUser(user: { id: string; phone?: string } | null) {

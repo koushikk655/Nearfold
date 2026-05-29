@@ -5,11 +5,9 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { TextInput } from '../../components';
-import { useTheme } from '../../theme/useTheme';
 import { Section, StoryFrame } from '../StoryFrame';
 
 export function TextInputStory() {
-  const theme = useTheme();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');

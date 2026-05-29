@@ -57,4 +57,7 @@ export const lightColors = {
   rippleColor: 'rgba(26, 22, 18, 0.08)',
 } as const;
 
-export type ColorTokens = typeof lightColors;
+// Widen each token to `string` so the dark palette (different hex values)
+// is assignable to the same shape. `keyof typeof lightColors` keeps the
+// key set authoritative — add a token to light and dark must match.
+export type ColorTokens = Record<keyof typeof lightColors, string>;

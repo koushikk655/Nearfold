@@ -44,7 +44,8 @@ export const darkTheme: Theme = {
 
 export const themes = { light: lightTheme, dark: darkTheme } as const;
 
-export { lightColors, darkColors } from './colors.light';
+export { lightColors } from './colors.light';
+export { darkColors } from './colors.dark';
 export type { ColorTokens } from './colors.light';
 export { spacing } from './spacing';
 export type { SpacingToken } from './spacing';

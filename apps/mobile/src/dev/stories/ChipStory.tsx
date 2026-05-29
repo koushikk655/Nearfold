@@ -1,7 +1,7 @@
 // Chip story — selectable, removable, with icon, sm + md.
 
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 
 import { Chip } from '../../components';
 import { useTheme } from '../../theme/useTheme';

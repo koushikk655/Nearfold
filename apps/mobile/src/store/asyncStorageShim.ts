@@ -13,8 +13,12 @@ import Storage from 'expo-sqlite/kv-store';
 
 const shim = {
   getItem: (name: string): Promise<string | null> => Storage.getItemAsync(name),
-  setItem: (name: string, value: string): Promise<void> => Storage.setItemAsync(name, value),
-  removeItem: (name: string): Promise<void> => Storage.removeItemAsync(name),
+  setItem: async (name: string, value: string): Promise<void> => {
+    await Storage.setItemAsync(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await Storage.removeItemAsync(name);
+  },
 };
 
 export default shim;

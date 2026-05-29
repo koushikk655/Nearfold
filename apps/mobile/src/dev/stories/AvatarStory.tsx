@@ -1,6 +1,6 @@
 // Avatar story — sizes, statuses, image vs initials.
 
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 
 import { Avatar } from '../../components';
 import { useTheme } from '../../theme/useTheme';

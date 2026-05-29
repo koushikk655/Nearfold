@@ -25,6 +25,9 @@
 import Constants from 'expo-constants';
 
 import { useAuthStore } from '../store/authStore';
+// Static import is safe despite the client ↔ auth cycle: `authApi` is only
+// dereferenced inside refreshTokenOnce(), never at module-eval time.
+import { authApi } from './auth';
 
 export class ApiError extends Error {
   readonly status: number;
@@ -101,9 +104,6 @@ async function refreshTokenOnce(): Promise<boolean> {
 
   refreshInFlight = (async (): Promise<boolean> => {
     try {
-      // Import lazily to avoid an authStore ↔ api/auth ↔ api/client cycle
-      // when this file is initialized.
-      const { authApi } = await import('./auth');
       const fresh = await authApi.refresh(refreshToken);
       useAuthStore.getState().setSession(fresh);
       return true;
