@@ -1,5 +1,5 @@
-// Address hooks — list + create. Edit/delete land with the Settings
-// screen in Week 6; checkout only needs list + quick-add.
+// Address hooks — list / create / update / delete. Used by checkout
+// (list + create) and the Settings → Addresses screen (full CRUD).
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -20,8 +20,23 @@ export function useCreateAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: AddressInput) => addressesApi.create(input),
-    onSuccess: () => {
-      void qc.invalidateQueries({ queryKey: queryKeys.addresses() });
-    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses() }),
+  });
+}
+
+export function useUpdateAddress() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: Partial<AddressInput> }) =>
+      addressesApi.update(id, input),
+    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses() }),
+  });
+}
+
+export function useDeleteAddress() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => addressesApi.remove(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addresses() }),
   });
 }

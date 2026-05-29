@@ -37,6 +37,12 @@
         }
       ],
       [
+        "expo-notifications",
+        {
+          "color": "#FF8A3D"
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "ios": { "useFrameworks": "static" }
