@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "Nearfold",
+    "slug": "nearfold",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "nearfold",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "runtimeVersion": { "policy": "appVersion" },
+    "updates": {
+      "url": "https://u.expo.dev/REPLACE_WITH_EAS_PROJECT_ID"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.nearfold.app",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Nearfold uses your location to show home makers and shops within delivery range of you."
+      }
+    },
+    "android": {
+      "package": "com.nearfold.app",
+      "edgeToEdgeEnabled": true,
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Nearfold uses your location to show makers within delivery range."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#FF8A3D"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": { "useFrameworks": "static" }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FAF8F4",
+          "dark": { "backgroundColor": "#0E0B08" },
+          "image": "./assets/splash.png",
+          "imageWidth": 200
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiBaseUrl": "http://localhost:3000/api/v1",
+      "sentryDsn": "",
+      "appVariant": "development",
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}
