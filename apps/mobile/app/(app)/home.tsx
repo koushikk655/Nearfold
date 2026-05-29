@@ -1,8 +1,15 @@
-// (app)/index — placeholder home for authenticated users.
+// (app)/home — placeholder home for authenticated users.
 //
 // Week 3 turns this into the Discover feed. For Week 2 it just confirms
 // the auth round-trip worked — shows the logged-in user, a sign-out
 // button, and (in __DEV__) the design-system gallery entry.
+//
+// Sign-out (Week 2.5):
+//   1. POST /auth/logout with the refresh token (best-effort — swallow
+//      errors so a flaky network doesn't strand the user)
+//   2. Firebase signOut
+//   3. authStore.clear()  → status='anonymous' → layout redirects to
+//      /auth/phone
 
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,6 +18,7 @@ import { Link } from 'expo-router';
 import { Avatar, Button, Card } from '../../src/components';
 import { useTheme } from '../../src/theme/useTheme';
 import { useAuthStore } from '../../src/store/authStore';
+import { authApi } from '../../src/api/auth';
 import { signOutFirebase } from '../../src/firebase/phoneAuth';
 
 export default function HomeRoute() {
@@ -25,9 +33,26 @@ export default function HomeRoute() {
         text: 'Sign out',
         style: 'destructive',
         onPress: async () => {
+          // Read the refresh token BEFORE clearing — clear() nukes it.
+          const refreshToken = useAuthStore.getState().refreshToken;
+
+          // Best-effort server revoke. Swallow errors so network problems
+          // don't strand a user trying to sign out — they'll still get a
+          // local sign-out below.
+          if (refreshToken) {
+            try {
+              await authApi.logout(refreshToken);
+            } catch (err) {
+              // eslint-disable-next-line no-console
+              console.warn('[auth] logout call failed (ignoring)', err);
+            }
+          }
+
+          // Best-effort Firebase sign-out (also fine to fail).
           await signOutFirebase().catch(() => {
-            /* swallow — even if Firebase fails, clear local */
+            /* swallow */
           });
+
           clear();
         },
       },

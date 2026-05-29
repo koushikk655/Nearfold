@@ -1,14 +1,21 @@
-// Auth store — token + user, persisted to SecureStore via Zustand persist.
+// Auth store — token pair + user, persisted to SecureStore via Zustand persist.
+//
+// Shape was extended in Week 2.5 to carry the refresh-token contract that
+// the backend will ship (see project doc 🔐 "Spec — Backend: /auth/refresh
+// + refresh-token rotation").
+//
+// Tolerant migration:
+//   • If the backend has shipped refresh tokens, we get all four fields
+//     (accessToken, refreshToken, both expiry timestamps).
+//   • If the backend still returns the legacy { token, user } shape, we
+//     fall back gracefully — token is stored as the access token, no
+//     refresh capability, user re-OTPs when JWT expires (current behavior).
 //
 // `status` is a small state machine:
 //   'idle'         → initial render; we don't yet know if a token exists
 //   'hydrating'    → reading SecureStore
 //   'authenticated'→ token loaded and present
 //   'anonymous'    → no token; user must go through OTP flow
-//
-// Splits hydration from "is user logged in" so the splash screen can show
-// the right thing instead of flashing the auth screen for users who ARE
-// logged in.
 
 import * as SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
@@ -18,13 +25,34 @@ import type { AuthUser } from '../api/auth';
 
 export type AuthStatus = 'idle' | 'hydrating' | 'authenticated' | 'anonymous';
 
+/** What the backend returns from /auth/verify-otp and /auth/refresh. */
+export interface ServerSession {
+  /** New field name. Falls back to `token` for back-compat. */
+  accessToken?: string;
+  /** Legacy field name (PR-A transition). */
+  token?: string;
+  /** Present only after the backend lands refresh tokens. */
+  refreshToken?: string;
+  /** ISO 8601 timestamps when present. */
+  accessTokenExpiresAt?: string;
+  refreshTokenExpiresAt?: string;
+  user: AuthUser;
+}
+
 interface AuthState {
-  token: string | null;
+  token: string | null; // access token
+  refreshToken: string | null;
   user: AuthUser | null;
+  /** Epoch ms. null if the backend didn't tell us. */
+  accessTokenExpiresAt: number | null;
+  refreshTokenExpiresAt: number | null;
   status: AuthStatus;
 
-  setSession: (session: { token: string; user: AuthUser }) => void;
+  /** Persist a fresh session returned by verify-otp or refresh. */
+  setSession: (session: ServerSession) => void;
+  /** Wipe everything (sign-out, refresh failure, 401). */
   clear: () => void;
+  /** Called by the persist rehydrator after disk read. */
   markHydrated: () => void;
   setStatus: (s: AuthStatus) => void;
 }
@@ -37,17 +65,48 @@ const secureStringStorage = {
   removeItem: (name: string) => SecureStore.deleteItemAsync(name),
 };
 
+function parseIsoMs(iso: string | undefined): number | null {
+  if (!iso) return null;
+  const t = Date.parse(iso);
+  return Number.isFinite(t) ? t : null;
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       token: null,
+      refreshToken: null,
       user: null,
+      accessTokenExpiresAt: null,
+      refreshTokenExpiresAt: null,
       status: 'idle',
 
-      setSession: ({ token, user }) =>
-        set({ token, user, status: 'authenticated' }),
+      setSession: (session) => {
+        const access = session.accessToken ?? session.token ?? null;
+        if (!access) {
+          // Defensive — should never happen, but don't silently auth a user
+          // without a token.
+          throw new Error('setSession called without an access token');
+        }
+        set({
+          token: access,
+          refreshToken: session.refreshToken ?? null,
+          user: session.user,
+          accessTokenExpiresAt: parseIsoMs(session.accessTokenExpiresAt),
+          refreshTokenExpiresAt: parseIsoMs(session.refreshTokenExpiresAt),
+          status: 'authenticated',
+        });
+      },
 
-      clear: () => set({ token: null, user: null, status: 'anonymous' }),
+      clear: () =>
+        set({
+          token: null,
+          refreshToken: null,
+          user: null,
+          accessTokenExpiresAt: null,
+          refreshTokenExpiresAt: null,
+          status: 'anonymous',
+        }),
 
       markHydrated: () =>
         set((state) => ({
@@ -59,7 +118,13 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'nearfold/auth',
       storage: createJSONStorage(() => secureStringStorage),
-      partialize: (state) => ({ token: state.token, user: state.user }),
+      partialize: (state) => ({
+        token: state.token,
+        refreshToken: state.refreshToken,
+        user: state.user,
+        accessTokenExpiresAt: state.accessTokenExpiresAt,
+        refreshTokenExpiresAt: state.refreshTokenExpiresAt,
+      }),
       onRehydrateStorage: () => (_rehydratedState, error) => {
         if (error) {
           // SecureStore can fail on simulators that don't have Keychain
@@ -67,8 +132,6 @@ export const useAuthStore = create<AuthState>()(
           // eslint-disable-next-line no-console
           console.warn('[auth] rehydrate failed', error);
         }
-        // Flip status on the next tick so subscribers see populated token
-        // before the status change fires.
         queueMicrotask(() => {
           useAuthStore.getState().markHydrated();
         });

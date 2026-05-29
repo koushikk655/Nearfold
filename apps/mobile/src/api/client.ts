@@ -1,14 +1,26 @@
 // Typed fetch wrapper for the Nearfold backend.
 //
 // Conventions enforced here:
-// - All routes live under /api/v1. The base URL comes from Constants.expoConfig.extra.
-// - Auth-bearing requests inject `Authorization: Bearer <token>` from authStore.
+// - All routes live under /api/v1. The base URL comes from
+//   Constants.expoConfig.extra.apiBaseUrl.
+// - Auth-bearing requests inject `Authorization: Bearer <token>` from
+//   authStore.
 // - Backend envelope is { success: true, data } on success and
 //   { success: false, error: { code, message, details? } } on failure.
 //   We unwrap success → return `data`; failure → throw `ApiError`.
-// - 401 responses trigger an auth clear so the user is bounced back to /auth/phone.
 //
-// Used directly by api/auth.ts and (Week 3+) by TanStack Query mutations.
+// 401 INTERCEPTOR — added in Week 2.5
+// -----------------------------------
+// When a non-internal request comes back 401 AND the auth store has a
+// refresh token, we attempt ONE refresh, then retry the original request
+// exactly once.
+//
+// Concurrent 401s coalesce on a shared promise so we don't fire N
+// /auth/refresh calls in parallel (which would all rotate the same token
+// against each other and trigger the backend's reuse-detection).
+//
+// Requests that opt out via `skipRefresh: true` (the refresh + logout
+// endpoints themselves) bypass the interceptor entirely.
 
 import Constants from 'expo-constants';
 
@@ -52,17 +64,73 @@ function getBaseUrl(): string {
 export interface RequestOptions {
   /** Skip Bearer token injection (for unauthenticated endpoints like /auth/*). */
   unauth?: boolean;
+  /** Bypass the 401 → refresh → retry interceptor. Used by /auth/refresh
+   *  itself + /auth/logout so a refresh failure doesn't recurse. */
+  skipRefresh?: boolean;
   /** Abort the request after this many ms. Default 12s. */
   timeoutMs?: number;
   /** Query string params. */
   params?: Record<string, string | number | boolean | undefined | null>;
 }
 
-async function request<T>(
+// ────────────────────────────────────────────────────────────────────
+// Refresh coalescing
+// ────────────────────────────────────────────────────────────────────
+// In-flight refresh, if any. Concurrent 401s await this rather than
+// firing parallel /auth/refresh calls (which would race + trigger the
+// backend's reuse detection on the loser).
+let refreshInFlight: Promise<boolean> | null = null;
+
+/**
+ * Attempt a refresh using the stored refresh token. Returns true on
+ * success (authStore is updated), false on failure (authStore is cleared
+ * and the caller should NOT retry).
+ *
+ * Multiple concurrent callers share the same promise.
+ */
+async function refreshTokenOnce(): Promise<boolean> {
+  if (refreshInFlight) return refreshInFlight;
+
+  const { refreshToken } = useAuthStore.getState();
+  if (!refreshToken) {
+    // No refresh capability (either backend hasn't shipped refresh yet,
+    // or the user truly has no session). Clear and force re-auth.
+    useAuthStore.getState().clear();
+    return false;
+  }
+
+  refreshInFlight = (async (): Promise<boolean> => {
+    try {
+      // Import lazily to avoid an authStore ↔ api/auth ↔ api/client cycle
+      // when this file is initialized.
+      const { authApi } = await import('./auth');
+      const fresh = await authApi.refresh(refreshToken);
+      useAuthStore.getState().setSession(fresh);
+      return true;
+    } catch (err) {
+      // Any refresh failure → wipe local state. Distinguishing
+      // REFRESH_REUSED / REFRESH_EXPIRED / REFRESH_INVALID is a Sentry
+      // concern; for the UI they all mean "sign in again".
+      // eslint-disable-next-line no-console
+      console.warn('[auth] refresh failed', err);
+      useAuthStore.getState().clear();
+      return false;
+    } finally {
+      refreshInFlight = null;
+    }
+  })();
+
+  return refreshInFlight;
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Core request
+// ────────────────────────────────────────────────────────────────────
+async function executeRequest<T>(
   method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE',
   path: string,
   body: unknown | undefined,
-  opts: RequestOptions = {},
+  opts: RequestOptions,
 ): Promise<T> {
   const baseUrl = getBaseUrl();
   const url = new URL(baseUrl + (path.startsWith('/') ? path : '/' + path));
@@ -136,17 +204,49 @@ async function request<T>(
 
   if (payload.success) return payload.data;
 
-  // Auth failure → wipe local session.
-  if (res.status === 401) {
-    useAuthStore.getState().clear();
-  }
-
   throw new ApiError({
     status: res.status,
     code: payload.error.code ?? 'UNKNOWN_ERROR',
     message: payload.error.message ?? `Request failed with ${res.status}.`,
     details: payload.error.details,
   });
+}
+
+/**
+ * Public request entry-point. Wraps executeRequest with the 401 → refresh
+ * → retry-once interceptor.
+ */
+async function request<T>(
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE',
+  path: string,
+  body: unknown | undefined,
+  opts: RequestOptions = {},
+): Promise<T> {
+  try {
+    return await executeRequest<T>(method, path, body, opts);
+  } catch (err) {
+    // Only react to 401s on authenticated requests that haven't already
+    // opted out of refresh.
+    if (
+      !(err instanceof ApiError) ||
+      err.status !== 401 ||
+      opts.unauth ||
+      opts.skipRefresh
+    ) {
+      throw err;
+    }
+
+    const refreshed = await refreshTokenOnce();
+    if (!refreshed) {
+      // refreshTokenOnce already cleared the store; bubble the original
+      // 401 so callers can react (e.g. surface "session expired" copy).
+      throw err;
+    }
+
+    // Retry the original request exactly once. If it 401s again the
+    // recursive call will see skipRefresh=true and bail.
+    return executeRequest<T>(method, path, body, { ...opts, skipRefresh: true });
+  }
 }
 
 export const api = {
