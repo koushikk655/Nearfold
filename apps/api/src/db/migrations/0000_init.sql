@@ -1,5 +1,5 @@
 -- ============================================================================
--- Nearfold initial schema
+-- NearKin initial schema
 -- Requires: PostgreSQL 14+ with the PostGIS extension available.
 -- ============================================================================
 

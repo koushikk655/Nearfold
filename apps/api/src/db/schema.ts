@@ -1,5 +1,5 @@
 /**
- * Drizzle ORM schema for Nearfold.
+ * Drizzle ORM schema for NearKin.
  *
  * Notes on PostGIS geography columns:
  * - Drizzle has no first-class `geography` column, so we declare them as

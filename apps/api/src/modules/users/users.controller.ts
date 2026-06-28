@@ -3,7 +3,7 @@ import type {
   RegisterDeviceTokenInput,
   UpdateUserLocationInput,
   UpdateUserProfileInput,
-} from '@nearfold/shared';
+} from '@nearkin/shared';
 import { sendSuccess } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { UnauthorizedError } from '../../utils/errors.js';

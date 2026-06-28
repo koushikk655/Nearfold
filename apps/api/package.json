@@ -1,5 +1,5 @@
 {
-  "name": "@nearfold/api",
+  "name": "@nearkin/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
   },
   "//": "NOTE: build tooling (typescript, tsx, @types/*) lives in dependencies, not devDependencies. Render sets NODE_ENV=production, which makes pnpm skip devDependencies on install — that broke `pnpm build` (tsc) and `db:migrate` (tsx) on deploy. Keeping them here makes the deploy build work regardless of the install flags. Once a pnpm-lock.yaml is committed and the Render build command is pinned to `pnpm install --prod=false`, these can move back to devDependencies.",
   "dependencies": {
-    "@nearfold/shared": "workspace:*",
+    "@nearkin/shared": "workspace:*",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",

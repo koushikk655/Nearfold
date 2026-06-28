@@ -3,7 +3,7 @@ import {
   createProductSchema,
   paginationQuerySchema,
   updateProductSchema,
-} from '@nearfold/shared';
+} from '@nearkin/shared';
 import { requireAuth } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
 import { productsController } from './products.controller.js';

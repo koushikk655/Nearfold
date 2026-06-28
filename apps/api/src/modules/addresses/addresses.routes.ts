@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createAddressSchema, updateAddressSchema } from '@nearfold/shared';
+import { createAddressSchema, updateAddressSchema } from '@nearkin/shared';
 import { requireAuth } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
 import { addressesController } from './addresses.controller.js';

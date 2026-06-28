@@ -7,7 +7,7 @@ async function main(): Promise<void> {
   const app = createServer();
 
   const server = app.listen(env.PORT, () => {
-    logger.info({ port: env.PORT, env: env.NODE_ENV }, 'Nearfold API listening');
+    logger.info({ port: env.PORT, env: env.NODE_ENV }, 'NearKin API listening');
   });
 
   const shutdown = async (signal: string): Promise<void> => {

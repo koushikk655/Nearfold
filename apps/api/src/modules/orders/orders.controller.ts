@@ -4,7 +4,7 @@ import type {
   CreateOrderInput,
   PaginationQuery,
   UpdateOrderStatusInput,
-} from '@nearfold/shared';
+} from '@nearkin/shared';
 import { sendCreated, sendSuccess } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { UnauthorizedError } from '../../utils/errors.js';

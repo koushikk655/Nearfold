@@ -2,7 +2,7 @@ import type {
   CreateSellerProfileInput,
   UpdateSellerProfileInput,
   VerificationStatus,
-} from '@nearfold/shared';
+} from '@nearkin/shared';
 import { ConflictError, NotFoundError } from '../../utils/errors.js';
 import { sellersRepository } from './sellers.repository.js';
 

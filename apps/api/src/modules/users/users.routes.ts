@@ -3,7 +3,7 @@ import {
   registerDeviceTokenSchema,
   updateUserLocationSchema,
   updateUserProfileSchema,
-} from '@nearfold/shared';
+} from '@nearkin/shared';
 import { requireAuth } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
 import { usersController } from './users.controller.js';

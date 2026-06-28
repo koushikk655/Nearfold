@@ -4,7 +4,7 @@ import {
   createOrderSchema,
   paginationQuerySchema,
   updateOrderStatusSchema,
-} from '@nearfold/shared';
+} from '@nearkin/shared';
 import { requireAuth } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
 import { ordersController } from './orders.controller.js';

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createReviewSchema, paginationQuerySchema } from '@nearfold/shared';
+import { createReviewSchema, paginationQuerySchema } from '@nearkin/shared';
 import { requireAuth } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
 import { reviewsController } from './reviews.controller.js';

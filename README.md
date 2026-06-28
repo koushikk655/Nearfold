@@ -1,10 +1,10 @@
-# Nearfold
+# NearKin
 
 > Hyperlocal marketplace for home-based sellers and local commerce in India.
 
-A production-ready Node.js + TypeScript backend covering the full Phase 1–4 feature set of the Nearfold MVP architecture spec: phone-OTP auth, GPS-based seller discovery, persistent carts, server-validated checkout with Razorpay + Cash-on-Delivery, order state machine with audit trail, Expo push notifications, and reviews.
+A production-ready Node.js + TypeScript backend covering the full Phase 1–4 feature set of the NearKin MVP architecture spec: phone-OTP auth, GPS-based seller discovery, persistent carts, server-validated checkout with Razorpay + Cash-on-Delivery, order state machine with audit trail, Expo push notifications, and reviews.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/koushikk655/Nearfold)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/koushikk655/NearKin)
 
 One-click deploy to Render's free tier — see [Deploy to Render](#deploy-to-render) below.
 
@@ -246,7 +246,7 @@ The repo includes a [`render.yaml`](./render.yaml) blueprint that provisions a f
 
 ### One-click deploy
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/koushikk655/Nearfold)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/koushikk655/NearKin)
 
 ### Step-by-step
 

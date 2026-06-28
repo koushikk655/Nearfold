@@ -6,7 +6,7 @@ export default defineConfig({
   out: './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/nearfold',
+    url: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/nearkin',
   },
   verbose: true,
   strict: true,

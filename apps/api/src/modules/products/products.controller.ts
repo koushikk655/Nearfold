@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { CreateProductInput, PaginationQuery, UpdateProductInput } from '@nearfold/shared';
+import type { CreateProductInput, PaginationQuery, UpdateProductInput } from '@nearkin/shared';
 import { sendCreated, sendNoContent, sendSuccess } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { UnauthorizedError } from '../../utils/errors.js';

@@ -1,4 +1,4 @@
-import type { CreateProductInput, UpdateProductInput } from '@nearfold/shared';
+import type { CreateProductInput, UpdateProductInput } from '@nearkin/shared';
 import type { Product } from '../../db/schema.js';
 import { ForbiddenError, NotFoundError } from '../../utils/errors.js';
 import { sellersRepository } from '../sellers/sellers.repository.js';

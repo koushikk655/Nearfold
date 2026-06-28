@@ -1,4 +1,4 @@
-import { ORDER_STATE_TRANSITIONS, type OrderStatus } from '@nearfold/shared';
+import { ORDER_STATE_TRANSITIONS, type OrderStatus } from '@nearkin/shared';
 import { ConflictError } from '../../utils/errors.js';
 
 /**

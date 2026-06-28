@@ -1,6 +1,6 @@
 # Third-Party Setup Guide
 
-Step-by-step walkthrough for every external service Nearfold integrates with. Every recommended option below has a **free tier** sufficient for an MVP.
+Step-by-step walkthrough for every external service NearKin integrates with. Every recommended option below has a **free tier** sufficient for an MVP.
 
 > **Cost summary for an early MVP**: ₹0/month, assuming traffic stays within free-tier limits.
 
@@ -134,7 +134,7 @@ ngrok http 3000
 - Most comprehensive coverage of Indian addresses, POIs, and geocoding.
 - Free tier: $200 credit/month — sufficient for an MVP at typical Tier 2 city traffic.
 
-### What's used by Nearfold
+### What's used by NearKin
 
 The backend itself does **not** call Google Maps. The mobile app needs an API key for:
 
@@ -193,10 +193,10 @@ The backend stores the token on the user row and sends notifications via the Exp
 
 1. Push this repo to GitHub.
 2. Sign in to [render.com](https://render.com) with GitHub.
-3. **New → Web Service** → pick your `Nearfold` repo.
+3. **New → Web Service** → pick your `NearKin` repo.
 4. Settings:
    - **Build command**: `pnpm install --frozen-lockfile && pnpm build`
-   - **Start command**: `pnpm --filter @nearfold/api start`
+   - **Start command**: `pnpm --filter @nearkin/api start`
    - **Environment**: Node
 5. Add all `.env` values in the **Environment** tab.
 6. Connect Render's IP allowlist to your Neon database (or use Neon's "Allow all" for testing).
@@ -218,7 +218,7 @@ The backend stores the token on the user row and sends notifications via the Exp
 Not wired up by default. To add:
 
 ```bash
-pnpm --filter @nearfold/api add @sentry/node
+pnpm --filter @nearkin/api add @sentry/node
 ```
 
 Then in `apps/api/src/index.ts`, call `Sentry.init({ dsn: env.SENTRY_DSN })` before `createServer()`.

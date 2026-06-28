@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { AddToCartInput, UpdateCartItemInput } from '@nearfold/shared';
+import type { AddToCartInput, UpdateCartItemInput } from '@nearkin/shared';
 import { sendSuccess } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { UnauthorizedError } from '../../utils/errors.js';

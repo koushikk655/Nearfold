@@ -1,4 +1,4 @@
-import type { CreateAddressInput, UpdateAddressInput } from '@nearfold/shared';
+import type { CreateAddressInput, UpdateAddressInput } from '@nearkin/shared';
 import { NotFoundError } from '../../utils/errors.js';
 import { addressesRepository } from './addresses.repository.js';
 

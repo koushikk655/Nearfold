@@ -13,7 +13,7 @@ export const uploadsController = {
   signedUpload: asyncHandler(async (req: Request, res: Response) => {
     if (!req.user) throw new UnauthorizedError();
     const { type } = req.body as z.infer<typeof signedUploadSchema>;
-    const folder = `nearfold/${type}/${req.user.sub}`;
+    const folder = `nearkin/${type}/${req.user.sub}`;
     const params = cloudinaryService.generateSignedUpload(folder);
     sendSuccess(res, params);
   }),

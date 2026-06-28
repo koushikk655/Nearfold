@@ -1,7 +1,7 @@
 # ============================================================================
-# Nearfold — Render Blueprint
+# NearKin — Render Blueprint
 #
-# One-click deploy of the Nearfold backend to Render's free tier.
+# One-click deploy of the NearKin backend to Render's free tier.
 #
 # Provisions:
 #   - 1 web service (Node 20, Singapore region — closest to Indian users)
@@ -53,9 +53,9 @@ services:
       corepack prepare pnpm@9.12.0 --activate
       pnpm install --no-frozen-lockfile --prod=false
       pnpm build
-      pnpm --filter @nearfold/api db:migrate
+      pnpm --filter @nearkin/api db:migrate
 
-    startCommand: pnpm --filter @nearfold/api start
+    startCommand: pnpm --filter @nearkin/api start
 
     envVars:
       # --- Runtime ---

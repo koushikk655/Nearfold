@@ -1,4 +1,4 @@
-import type { AddToCartInput, CartItem, UpdateCartItemInput } from '@nearfold/shared';
+import type { AddToCartInput, CartItem, UpdateCartItemInput } from '@nearkin/shared';
 import { ConflictError, NotFoundError, ValidationError } from '../../utils/errors.js';
 import { calculateOrderTotals } from '../../utils/money.js';
 import { productsRepository } from '../products/products.repository.js';

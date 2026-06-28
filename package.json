@@ -1,8 +1,8 @@
 {
-  "name": "nearfold",
+  "name": "nearkin",
   "version": "0.1.0",
   "private": true,
-  "description": "Nearfold — hyperlocal marketplace platform for home-based sellers and local commerce in India.",
+  "description": "NearKin — hyperlocal marketplace platform for home-based sellers and local commerce in India.",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"

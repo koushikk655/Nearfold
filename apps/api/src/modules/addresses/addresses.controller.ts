@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { CreateAddressInput, UpdateAddressInput } from '@nearfold/shared';
+import type { CreateAddressInput, UpdateAddressInput } from '@nearkin/shared';
 import { sendCreated, sendNoContent, sendSuccess } from '../../utils/apiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { UnauthorizedError } from '../../utils/errors.js';
